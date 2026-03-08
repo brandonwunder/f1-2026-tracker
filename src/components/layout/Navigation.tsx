@@ -47,7 +47,7 @@ export default function Navigation() {
         </div>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 text-white hover:text-f1-red transition-colors"
+          className="w-11 h-11 flex items-center justify-center rounded-lg text-white hover:text-f1-red hover:bg-white/5 transition-colors"
           aria-label="Toggle menu"
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -99,10 +99,10 @@ export default function Navigation() {
           {/* Active background */}
           {activeIndex >= 0 && (
             <motion.div
-              className="absolute left-3 right-3 h-11 rounded-lg"
+              className="absolute left-3 right-3 h-[44px] rounded-lg"
               layoutId="nav-active"
               style={{
-                top: `${24 + activeIndex * 48}px`,
+                top: `${24 + activeIndex * 52}px`,
                 background: 'linear-gradient(90deg, rgba(225, 6, 0, 0.15), rgba(225, 6, 0, 0.05))',
                 borderLeft: '3px solid #E10600',
                 boxShadow: '0 0 20px rgba(225, 6, 0, 0.1)',
@@ -120,7 +120,7 @@ export default function Navigation() {
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  'relative flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all z-10',
+                  'relative flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm font-semibold transition-all z-10 min-h-[44px]',
                   active
                     ? 'text-white'
                     : 'text-f1-muted hover:text-white hover:bg-white/[0.03]'

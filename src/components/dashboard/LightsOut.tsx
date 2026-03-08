@@ -224,9 +224,9 @@ export default function LightsOut({ children }: LightsOutProps) {
           </motion.div>
 
           {/* 5 red light panels — F1 starting lights style */}
-          <div className="flex items-center gap-3 sm:gap-5 relative">
+          <div className="flex items-center gap-2 sm:gap-5 relative px-2">
             {/* Metal housing bar */}
-            <div className="absolute -inset-x-6 -inset-y-4 rounded-2xl border border-f1-border/30 bg-[#0D0D16]/80" />
+            <div className="absolute -inset-x-4 sm:-inset-x-6 -inset-y-4 rounded-2xl border border-f1-border/30 bg-[#0D0D16]/80" />
 
             {Array.from({ length: 5 }).map((_, i) => {
               const isLit = phase === 'sequence' && litCount > i;
@@ -247,7 +247,7 @@ export default function LightsOut({ children }: LightsOutProps) {
                 >
                   {/* Outer housing */}
                   <div
-                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
+                    className="w-12 h-12 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
                     style={{
                       backgroundColor: '#0D0D16',
                       border: `3px solid ${isLit && !isOut ? '#E10600' : '#1F1F2B'}`,
@@ -259,7 +259,7 @@ export default function LightsOut({ children }: LightsOutProps) {
                   >
                     {/* Light bulb */}
                     <div
-                      className="w-8 h-8 sm:w-12 sm:h-12 rounded-full"
+                      className="w-6 h-6 sm:w-12 sm:h-12 rounded-full"
                       style={{
                         background: isLit && !isOut
                           ? 'radial-gradient(circle, #ff6b6b 0%, #E10600 50%, #8b0000 100%)'

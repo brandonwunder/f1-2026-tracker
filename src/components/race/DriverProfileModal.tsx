@@ -110,7 +110,7 @@ function ModalContent({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: 20 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl border border-f1-border"
+      className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-f1-border mx-2"
       style={{
         background: `linear-gradient(180deg, ${teamColor}15 0%, #1a1a2e 30%)`,
       }}
@@ -119,16 +119,16 @@ function ModalContent({
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-f1-dark/80 border border-f1-border flex items-center justify-center text-f1-muted hover:text-white hover:bg-f1-surface-hover transition-colors"
+        className="absolute top-3 right-3 z-10 w-11 h-11 rounded-full bg-f1-dark/80 border border-f1-border flex items-center justify-center text-f1-muted hover:text-white hover:bg-f1-surface-hover transition-colors"
       >
-        <X className="w-4 h-4" />
+        <X className="w-5 h-5" />
       </button>
 
       {/* Hero header */}
-      <div className="flex items-center gap-4 p-5 pb-3">
+      <div className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 pb-3">
         {/* Driver photo */}
         <div
-          className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0"
+          className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0"
           style={{
             background: `linear-gradient(135deg, ${teamColor}40, transparent)`,
             boxShadow: `0 4px 16px ${teamColor}30`,
@@ -186,7 +186,7 @@ function ModalContent({
 
       {/* Known For */}
       <div
-        className="mx-5 mb-4 p-3 rounded-lg text-sm text-gray-300"
+        className="mx-4 sm:mx-5 mb-4 p-3 rounded-lg text-sm text-gray-300"
         style={{
           borderLeft: `3px solid ${teamColor}`,
           backgroundColor: `${teamColor}10`,
@@ -196,7 +196,7 @@ function ModalContent({
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-4 gap-2 px-5 mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 sm:px-5 mb-4">
         {quickStats.map((stat) => {
           const Icon = iconMap[stat.icon] ?? Star;
           return (
@@ -218,7 +218,7 @@ function ModalContent({
       </div>
 
       {/* Extra stats row */}
-      <div className="grid grid-cols-3 gap-2 px-5 mb-4">
+      <div className="grid grid-cols-3 gap-2 px-4 sm:px-5 mb-4">
         <div className="glass-card rounded-lg p-2 text-center">
           <p className="text-sm font-bold text-white">{stats.fastestLaps}</p>
           <p className="text-[10px] text-f1-muted uppercase">Fastest Laps</p>
@@ -234,7 +234,7 @@ function ModalContent({
       </div>
 
       {/* Fun Facts (show first 3) */}
-      <div className="px-5 mb-4">
+      <div className="px-4 sm:px-5 mb-4">
         <h3 className="text-xs font-semibold text-f1-muted uppercase tracking-wider mb-2 flex items-center gap-1.5">
           <Sparkles className="w-3 h-3" style={{ color: teamColor }} />
           Fun Facts
@@ -258,7 +258,7 @@ function ModalContent({
       </div>
 
       {/* View full profile link */}
-      <div className="px-5 pb-5">
+      <div className="px-4 sm:px-5 pb-5">
         <Link
           href={`/drivers/${profile.driverId}`}
           className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:scale-[1.02]"

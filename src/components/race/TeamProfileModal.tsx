@@ -71,7 +71,7 @@ function ModalContent({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: 20 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl border border-f1-border"
+      className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-f1-border mx-2"
       style={{
         background: `linear-gradient(180deg, ${teamColor}18 0%, #1a1a2e 25%)`,
       }}
@@ -80,9 +80,9 @@ function ModalContent({
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-f1-dark/80 border border-f1-border flex items-center justify-center text-f1-muted hover:text-white hover:bg-f1-surface-hover transition-colors"
+        className="absolute top-3 right-3 z-10 w-11 h-11 rounded-full bg-f1-dark/80 border border-f1-border flex items-center justify-center text-f1-muted hover:text-white hover:bg-f1-surface-hover transition-colors"
       >
-        <X className="w-4 h-4" />
+        <X className="w-5 h-5" />
       </button>
 
       {/* Header */}
@@ -105,7 +105,7 @@ function ModalContent({
       </div>
 
       {/* Team Info Grid */}
-      <div className="grid grid-cols-2 gap-2 px-5 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 sm:px-5 mb-4">
         <InfoRow icon={MapPin} label="Base" value={profile.base} teamColor={teamColor} />
         <InfoRow icon={User} label="Team Principal" value={profile.teamPrincipal} teamColor={teamColor} />
         <InfoRow icon={Cpu} label="Power Unit" value={profile.powerUnit} teamColor={teamColor} />
@@ -113,7 +113,7 @@ function ModalContent({
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-2 px-5 mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 sm:px-5 mb-4">
         <StatBox icon={Trophy} label="Titles" value={profile.championships} teamColor={teamColor} />
         <StatBox icon={Flag} label="Wins" value={profile.wins} teamColor={teamColor} />
         <StatBox icon={Zap} label="Poles" value={profile.poles} teamColor={teamColor} />
@@ -121,11 +121,11 @@ function ModalContent({
       </div>
 
       {/* Drivers */}
-      <div className="px-5 mb-4">
+      <div className="px-4 sm:px-5 mb-4">
         <h3 className="text-xs font-semibold text-f1-muted uppercase tracking-wider mb-2">
           2026 Drivers
         </h3>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {profile.driverIds.map((driverId) => (
             <DriverMiniCard key={driverId} driverId={driverId} teamId={profile.teamId} teamColor={teamColor} onClose={onClose} />
           ))}
@@ -133,7 +133,7 @@ function ModalContent({
       </div>
 
       {/* Facts */}
-      <div className="px-5 mb-4">
+      <div className="px-4 sm:px-5 mb-4">
         <h3 className="text-xs font-semibold text-f1-muted uppercase tracking-wider mb-2">
           Team Facts
         </h3>
