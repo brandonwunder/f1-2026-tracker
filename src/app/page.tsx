@@ -90,13 +90,15 @@ export default async function DashboardPage() {
                 time={nextRace.time}
                 hasRaceResults={nextRaceHasResults}
               />
-              {/* Race weekend status — shows qualifying/race progress */}
-              <RaceStatusBanner
-                raceDate={nextRace.date}
-                raceTime={nextRace.time ?? "14:00:00Z"}
-                hasQualifying={nextRaceHasQualifying}
-                hasRaceResults={nextRaceHasResults}
-              />
+              {/* Race weekend status — only show when race isn't complete */}
+              {!nextRaceHasResults && (
+                <RaceStatusBanner
+                  raceDate={nextRace.date}
+                  raceTime={nextRace.time ?? "14:00:00Z"}
+                  hasQualifying={nextRaceHasQualifying}
+                  hasRaceResults={nextRaceHasResults}
+                />
+              )}
             </div>
           ) : (
             <div className="relative rounded-2xl bg-[#0D0D16] border border-f1-border overflow-hidden p-8 text-center">

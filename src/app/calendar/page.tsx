@@ -96,10 +96,10 @@ export default async function CalendarPage() {
           </div>
         </div>
 
-        {/* Race weekend status + countdown */}
-        {nextRace && countdownTarget && (
+        {/* Race weekend status + countdown — only show when race isn't complete */}
+        {nextRace && countdownTarget && !hasRaceResults && (
           <div className="space-y-4">
-            {/* Status banner — shows qualifying/race progress accurately */}
+            {/* Status banner — shows qualifying/race progress */}
             <RaceStatusBanner
               raceDate={nextRace.date}
               raceTime={nextRace.time ?? "14:00:00Z"}
@@ -107,14 +107,12 @@ export default async function CalendarPage() {
               hasRaceResults={hasRaceResults}
             />
 
-            {/* Countdown timer — only show if race hasn't happened yet */}
-            {!hasRaceResults && (
-              <CountdownTimer
-                targetDate={countdownTarget}
-                raceName={nextRace.raceName}
-                raceResultsPending={!hasRaceResults}
-              />
-            )}
+            {/* Countdown timer */}
+            <CountdownTimer
+              targetDate={countdownTarget}
+              raceName={nextRace.raceName}
+              raceResultsPending={!hasRaceResults}
+            />
           </div>
         )}
 
