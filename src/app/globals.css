@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --f1-dark: #15151E;
+  --f1-surface: #1F1F2B;
+  --f1-surface-hover: #2A2A3A;
+  --f1-red: #E10600;
+  --f1-border: #2E2E3E;
+  --f1-muted: #8B8B9E;
+}
+
+body {
+  @apply bg-f1-dark text-white antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #15151E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2E2E3E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3E3E4E;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2E2E3E #15151E;
+}
