@@ -11,6 +11,7 @@ import {
   getTeamIdFromConstructor,
 } from '@/lib/utils/drivers';
 import { TiltCard } from '@/components/ui/MotionWrappers';
+import TeamLogo from '@/components/ui/TeamLogo';
 
 interface DriverCardProps {
   standing: DriverStanding;
@@ -96,12 +97,15 @@ export default function DriverCard({ standing }: DriverCardProps) {
                 {driver.givenName}{' '}
                 <span className="text-white/90">{driver.familyName}</span>
               </h3>
-              <p
-                className="text-xs font-medium mt-0.5 truncate"
-                style={{ color: teamColor }}
-              >
-                {teamName}
-              </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <TeamLogo teamId={teamId} size={16} />
+                <p
+                  className="text-xs font-medium truncate"
+                  style={{ color: teamColor }}
+                >
+                  {teamName}
+                </p>
+              </div>
             </div>
 
             {/* Position Badge */}

@@ -5,6 +5,7 @@ import type { RaceWithResults } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import { getTeamIdFromConstructor } from "@/lib/utils/drivers";
 import { motion } from "framer-motion";
+import TeamLogo from "@/components/ui/TeamLogo";
 
 function getTeamColor(constructorId: string): string {
   const teamId = getTeamIdFromConstructor(constructorId);
@@ -80,15 +81,12 @@ export default function RecentResult({ race }: RecentResultProps) {
                 >
                   {label}
                 </span>
-                <div
-                  className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: teamColor }}
-                />
+                <TeamLogo teamId={constructorId} size={18} />
                 <span className="flex-1 text-sm text-white truncate">
                   {result.Driver.givenName}{" "}
                   <span className="font-bold">{result.Driver.familyName}</span>
                 </span>
-                <span className="text-xs text-f1-muted">
+                <span className="flex items-center gap-1 text-xs text-f1-muted">
                   {result.Constructor.name}
                 </span>
               </motion.div>

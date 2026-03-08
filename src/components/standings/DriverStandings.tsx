@@ -3,6 +3,7 @@
 import type { DriverStanding } from '@/lib/api/types';
 import { TEAMS } from '@/lib/constants/teams';
 import { StaggeredList, StaggeredListItem } from '@/components/ui/MotionWrappers';
+import TeamLogo from '@/components/ui/TeamLogo';
 
 function getTeamColor(constructorId: string): string {
   // Map Jolpica constructorId to our TEAMS keys
@@ -121,10 +122,7 @@ export default function DriverStandings({ standings }: DriverStandingsProps) {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <div
-                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: teamColor }}
-                          />
+                          <TeamLogo teamId={constructorId} size={22} />
                           <span className="text-f1-muted text-sm">{constructorName}</span>
                         </div>
                       </td>
@@ -190,10 +188,7 @@ export default function DriverStandings({ standings }: DriverStandingsProps) {
                         <span className="font-bold">{entry.Driver.familyName}</span>
                       </div>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <div
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: teamColor }}
-                        />
+                        <TeamLogo teamId={constructorId} size={16} />
                         <span className="text-f1-muted text-xs">{constructorName}</span>
                       </div>
                     </div>

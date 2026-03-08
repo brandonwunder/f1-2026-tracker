@@ -3,6 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import type { QualifyingResult } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
+import TeamLogo from "@/components/ui/TeamLogo";
 
 interface QualifyingResultsProps {
   results: QualifyingResult[];
@@ -119,7 +120,10 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                     </div>
                   </td>
                   <td className="py-2.5 px-2 text-f1-muted">
-                    {result.Constructor.name}
+                    <div className="flex items-center gap-1.5">
+                      <TeamLogo teamId={result.Constructor.constructorId} size={20} />
+                      {result.Constructor.name}
+                    </div>
                   </td>
                   <td className="py-2.5 px-2 text-right font-mono text-xs">
                     {result.Q1 ?? "-"}
@@ -174,7 +178,8 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                   {result.Driver.givenName}{" "}
                   <span className="font-bold">{result.Driver.familyName}</span>
                 </div>
-                <div className="text-f1-muted text-xs truncate">
+                <div className="flex items-center gap-1 text-f1-muted text-xs truncate">
+                  <TeamLogo teamId={result.Constructor.constructorId} size={14} />
                   {result.Constructor.name}
                 </div>
               </div>

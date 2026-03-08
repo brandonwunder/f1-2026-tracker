@@ -5,6 +5,7 @@ import type { DriverStanding, ConstructorStanding } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import { getTeamIdFromConstructor } from "@/lib/utils/drivers";
 import { motion } from "framer-motion";
+import TeamLogo from "@/components/ui/TeamLogo";
 
 function getTeamColor(constructorId: string): string {
   const teamId = getTeamIdFromConstructor(constructorId);
@@ -93,10 +94,7 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
                   <span className="text-sm font-bold text-f1-muted w-5 text-right tabular-nums">
                     {entry.position}
                   </span>
-                  <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: teamColor }}
-                  />
+                  <TeamLogo teamId={constructorId} size={18} />
                   <span className="flex-1 text-sm text-white truncate">
                     {entry.Driver.givenName}{" "}
                     <span className="font-bold">{entry.Driver.familyName}</span>
@@ -119,10 +117,7 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
                   <span className="text-sm font-bold text-f1-muted w-5 text-right tabular-nums">
                     {entry.position}
                   </span>
-                  <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: teamColor }}
-                  />
+                  <TeamLogo teamId={constructorId} size={18} />
                   <span className="flex-1 text-sm text-white truncate">
                     {entry.Constructor.name}
                   </span>

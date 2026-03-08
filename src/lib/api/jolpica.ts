@@ -116,7 +116,7 @@ async function jolpicaFetch<T>(
 /** Fetch the current season calendar (all races) */
 export async function getSeasonCalendar(): Promise<Race[]> {
   const data = await jolpicaFetch<JolpicaResponse<RaceTableData>>(
-    "/current.json",
+    "/2026.json",
     REVALIDATE_STATIC
   );
   return data?.MRData?.RaceTable?.Races ?? [];
@@ -125,7 +125,7 @@ export async function getSeasonCalendar(): Promise<Race[]> {
 /** Fetch all drivers for the current season */
 export async function getDrivers(): Promise<Driver[]> {
   const data = await jolpicaFetch<JolpicaResponse<DriverTableData>>(
-    "/current/drivers.json",
+    "/2026/drivers.json",
     REVALIDATE_STATIC
   );
   return data?.MRData?.DriverTable?.Drivers ?? [];
@@ -134,7 +134,7 @@ export async function getDrivers(): Promise<Driver[]> {
 /** Fetch all constructors for the current season */
 export async function getConstructors(): Promise<Constructor[]> {
   const data = await jolpicaFetch<JolpicaResponse<ConstructorTableData>>(
-    "/current/constructors.json",
+    "/2026/constructors.json",
     REVALIDATE_STATIC
   );
   return data?.MRData?.ConstructorTable?.Constructors ?? [];
@@ -143,7 +143,7 @@ export async function getConstructors(): Promise<Constructor[]> {
 /** Fetch driver championship standings */
 export async function getDriverStandings(): Promise<DriverStanding[]> {
   const data = await jolpicaFetch<JolpicaResponse<DriverStandingsData>>(
-    "/current/driverStandings.json",
+    "/2026/driverStandings.json",
     REVALIDATE_RESULTS
   );
   const lists = data?.MRData?.StandingsTable?.StandingsLists;
@@ -156,7 +156,7 @@ export async function getConstructorStandings(): Promise<
   ConstructorStanding[]
 > {
   const data = await jolpicaFetch<JolpicaResponse<ConstructorStandingsData>>(
-    "/current/constructorStandings.json",
+    "/2026/constructorStandings.json",
     REVALIDATE_RESULTS
   );
   const lists = data?.MRData?.StandingsTable?.StandingsLists;
@@ -169,7 +169,7 @@ export async function getRaceResults(
   round: number | string
 ): Promise<RaceWithResults | null> {
   const data = await jolpicaFetch<JolpicaResponse<RaceResultsTableData>>(
-    `/current/${round}/results.json`,
+    `/2026/${round}/results.json`,
     REVALIDATE_RESULTS
   );
   const races = data?.MRData?.RaceTable?.Races;
@@ -182,7 +182,7 @@ export async function getQualifyingResults(
   round: number | string
 ): Promise<RaceWithResults | null> {
   const data = await jolpicaFetch<JolpicaResponse<RaceResultsTableData>>(
-    `/current/${round}/qualifying.json`,
+    `/2026/${round}/qualifying.json`,
     REVALIDATE_RESULTS
   );
   const races = data?.MRData?.RaceTable?.Races;

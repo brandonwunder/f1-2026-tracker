@@ -3,6 +3,7 @@
 import type { ConstructorStanding, DriverStanding } from '@/lib/api/types';
 import { TEAMS } from '@/lib/constants/teams';
 import { StaggeredList, StaggeredListItem } from '@/components/ui/MotionWrappers';
+import TeamLogo from '@/components/ui/TeamLogo';
 
 function getTeamColor(constructorId: string): string {
   const idMap: Record<string, string> = {
@@ -120,10 +121,7 @@ export default function ConstructorStandings({
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2.5">
-                          <div
-                            className="w-3 h-3 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: teamColor }}
-                          />
+                          <TeamLogo teamId={constructorId} size={24} />
                           <span className="font-semibold text-white">
                             {entry.Constructor.name}
                           </span>
@@ -189,10 +187,7 @@ export default function ConstructorStandings({
                       {entry.position}
                     </span>
                     <div className="flex items-center gap-2">
-                      <div
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: teamColor }}
-                      />
+                      <TeamLogo teamId={constructorId} size={20} />
                       <span className="font-semibold text-white text-sm">
                         {entry.Constructor.name}
                       </span>
