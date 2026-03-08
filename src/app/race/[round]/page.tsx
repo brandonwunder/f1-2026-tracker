@@ -61,40 +61,53 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
         {/* Back navigation */}
         <Link
           href="/calendar"
-          className="text-f1-muted hover:text-white text-sm inline-flex items-center gap-1 transition-colors"
+          className="text-f1-muted hover:text-f1-red text-sm font-semibold inline-flex items-center gap-1.5 transition-colors uppercase tracking-wider"
         >
           &larr; Back to Calendar
         </Link>
 
-        {/* Race header */}
-        <div className="rounded-xl glass-card border border-f1-border p-5 md:p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-f1-muted text-sm font-medium">
-                  Round {raceInfo.round}
-                </span>
-                <span className="text-f1-border">|</span>
-                <span className="text-f1-muted text-sm">
-                  {formatRaceDateLong(raceInfo.date)}
-                </span>
+        {/* Race header — broadcast style */}
+        <div className="relative rounded-xl glass-card border border-f1-border overflow-hidden">
+          {/* Racing stripe top */}
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-f1-red to-transparent" />
+          {/* Carbon fiber texture */}
+          <div className="absolute inset-0 carbon-fiber opacity-30 pointer-events-none" />
+
+          <div className="relative p-5 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-f1-red bg-f1-red/10 px-2 py-0.5 rounded border border-f1-red/20">
+                    Round {raceInfo.round}
+                  </span>
+                  <span className="text-f1-muted text-xs font-medium tracking-wide">
+                    {formatRaceDateLong(raceInfo.date)}
+                  </span>
+                </div>
+                <h1 className="text-2xl md:text-3xl font-black tracking-tight">
+                  <span className="text-3xl md:text-4xl mr-2">{flag}</span>
+                  {raceInfo.raceName}
+                </h1>
+                <p className="text-f1-muted text-sm mt-1 font-medium">
+                  {raceInfo.circuitName} &middot; {raceInfo.locality}, {raceInfo.country}
+                </p>
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold">
-                {flag} {raceInfo.raceName}
-              </h1>
-              <p className="text-f1-muted mt-1">
-                {raceInfo.circuitName} &middot; {raceInfo.locality}, {raceInfo.country}
-              </p>
-            </div>
-            {/* Round badge */}
-            <div className="shrink-0">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-f1-dark border border-f1-border">
-                <span className="text-f1-muted text-xs uppercase tracking-wider">Round</span>
-                <span className="text-2xl font-bold text-f1-red">{raceInfo.round}</span>
-                <span className="text-f1-muted text-xs">/ 24</span>
+              {/* Round badge — broadcast style */}
+              <div className="shrink-0">
+                <div className="relative inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-f1-dark/80 border border-f1-border overflow-hidden">
+                  <div className="absolute inset-0 carbon-fiber opacity-40 pointer-events-none" />
+                  <div className="relative flex items-baseline gap-1.5">
+                    <span className="text-[10px] text-f1-muted uppercase tracking-widest font-semibold">Round</span>
+                    <span className="text-3xl font-black text-f1-red font-orbitron">{raceInfo.round}</span>
+                    <span className="text-f1-muted text-xs font-medium">/ 24</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Bottom broadcast divider */}
+          <div className="broadcast-divider" />
         </div>
 
         {/* Race weekend status banner */}
@@ -128,11 +141,12 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
         </div>
 
         {/* Navigation between rounds */}
-        <div className="flex justify-between items-center pt-4 border-t border-f1-border">
+        <div className="relative flex justify-between items-center pt-4">
+          <div className="absolute top-0 left-0 right-0 broadcast-divider" />
           {roundNum > 1 ? (
             <Link
               href={`/race/${roundNum - 1}`}
-              className="text-sm text-f1-muted hover:text-white transition-colors inline-flex items-center gap-1"
+              className="text-sm text-f1-muted hover:text-f1-red transition-colors inline-flex items-center gap-1.5 font-semibold uppercase tracking-wider"
             >
               &larr; Round {roundNum - 1}
             </Link>
@@ -142,7 +156,7 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
           {roundNum < 24 ? (
             <Link
               href={`/race/${roundNum + 1}`}
-              className="text-sm text-f1-muted hover:text-white transition-colors inline-flex items-center gap-1"
+              className="text-sm text-f1-muted hover:text-f1-red transition-colors inline-flex items-center gap-1.5 font-semibold uppercase tracking-wider"
             >
               Round {roundNum + 1} &rarr;
             </Link>

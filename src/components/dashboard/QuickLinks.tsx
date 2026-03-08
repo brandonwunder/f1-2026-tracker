@@ -70,16 +70,19 @@ export default function QuickLinks() {
         const Icon = link.icon;
         return (
           <motion.div key={link.href} variants={itemVariants}>
-            <TiltCard className="rounded-xl glass-card" glowColor="#E10600">
+            <TiltCard className="relative rounded-xl glass-card overflow-hidden" glowColor="#E10600">
+              {/* Accent stripe */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-f1-red/30 to-transparent" />
+              <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
               <Link
                 href={link.href}
-                className="group block p-4"
+                className="group relative block p-4"
               >
                 <Icon className="w-6 h-6 text-f1-red mb-2 group-hover:scale-110 transition-transform" />
-                <h3 className="text-sm font-semibold text-white group-hover:text-f1-red transition-colors">
+                <h3 className="text-sm font-black text-white group-hover:text-f1-red transition-colors uppercase tracking-wide">
                   {link.title}
                 </h3>
-                <p className="text-xs text-f1-muted mt-1">{link.description}</p>
+                <p className="text-xs text-f1-muted mt-1 font-medium">{link.description}</p>
               </Link>
             </TiltCard>
           </motion.div>

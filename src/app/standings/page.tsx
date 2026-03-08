@@ -12,11 +12,21 @@ export default async function StandingsPage() {
   return (
     <PageTransition>
       <div className="space-y-8">
-        <h1 className="text-2xl md:text-3xl font-bold">Championship Standings</h1>
+        {/* Page header — broadcast style */}
+        <div className="relative">
+          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-f1-red rounded-full shadow-[0_0_12px_rgba(225,6,0,0.4)]" />
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+            <span className="text-f1-red">CHAMPIONSHIP</span> STANDINGS
+          </h1>
+          <p className="text-f1-muted text-sm mt-1 font-medium tracking-wide uppercase">
+            2026 Season Leaderboard
+          </p>
+        </div>
+        <div className="broadcast-divider" />
 
         {/* Driver Championship */}
         <section className="space-y-3">
-          <h2 className="text-lg md:text-xl font-semibold text-f1-muted">
+          <h2 className="text-lg md:text-xl font-black uppercase tracking-wide text-white">
             Driver Championship
           </h2>
           <DriverStandings standings={driverStandings} />
@@ -24,7 +34,7 @@ export default async function StandingsPage() {
 
         {/* Constructor Championship */}
         <section className="space-y-3">
-          <h2 className="text-lg md:text-xl font-semibold text-f1-muted">
+          <h2 className="text-lg md:text-xl font-black uppercase tracking-wide text-white">
             Constructor Championship
           </h2>
           <ConstructorStandings

@@ -36,35 +36,44 @@ export default function NextRaceWidget({
     >
       <Link
         href={`/race/${round}`}
-        className="group block rounded-xl glass-card animate-glow-pulse p-6 transition-all duration-200 hover:border-f1-red/60 hover:bg-f1-surface-hover"
+        className="group relative block rounded-xl glass-card border border-f1-red/30 overflow-hidden transition-all duration-200 hover:border-f1-red/60"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-f1-red text-xs font-bold uppercase tracking-wider">
-            Up Next &mdash; Round {round}
-          </span>
-          <span className="text-xs text-f1-muted group-hover:text-white transition-colors">
-            View details &rarr;
-          </span>
-        </div>
+        {/* Racing stripe top */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-f1-red to-transparent" />
+        {/* Carbon fiber texture */}
+        <div className="absolute inset-0 carbon-fiber opacity-20 pointer-events-none" />
+        {/* Red radial glow */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at top right, rgba(225, 6, 0, 0.08), transparent 60%)' }} />
 
-        {/* Race info */}
-        <div className="flex items-start gap-3 mb-5">
-          <span className="text-4xl leading-none">{flag}</span>
-          <div className="min-w-0 flex-1">
-            <h2 className="text-xl font-bold text-white leading-tight">
-              {raceName}
-            </h2>
-            <p className="text-f1-muted text-sm mt-1">{circuitName}</p>
-            <p className="text-f1-muted text-sm">
-              {locality} &middot; {formattedDate}
-            </p>
+        <div className="relative p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[10px] font-black uppercase tracking-widest text-f1-red bg-f1-red/10 px-2.5 py-1 rounded border border-f1-red/20">
+              Up Next &mdash; Round {round}
+            </span>
+            <span className="text-xs text-f1-muted group-hover:text-f1-red transition-colors font-semibold uppercase tracking-wider">
+              View details &rarr;
+            </span>
           </div>
-        </div>
 
-        {/* Countdown */}
-        <div className="font-orbitron">
-          <CountdownTimer targetDate={targetDate} raceName={raceName} />
+          {/* Race info */}
+          <div className="flex items-start gap-3 mb-5">
+            <span className="text-4xl leading-none">{flag}</span>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
+                {raceName}
+              </h2>
+              <p className="text-f1-muted text-sm mt-1 font-medium">{circuitName}</p>
+              <p className="text-f1-muted text-sm font-medium">
+                {locality} &middot; {formattedDate}
+              </p>
+            </div>
+          </div>
+
+          {/* Countdown */}
+          <div className="font-orbitron">
+            <CountdownTimer targetDate={targetDate} raceName={raceName} />
+          </div>
         </div>
       </Link>
     </motion.div>

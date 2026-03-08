@@ -71,9 +71,14 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
   }
 
   return (
-    <div className="rounded-xl glass-card border border-f1-border p-5">
+    <div className="relative rounded-xl glass-card border border-f1-border overflow-hidden">
+      {/* Racing stripe top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-500/60 to-transparent" />
+      <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
+
+      <div className="relative p-5">
       <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-lg font-bold">Qualifying Results</h3>
+        <h3 className="text-lg font-black uppercase tracking-wide">Qualifying Results</h3>
         <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
           Complete
         </span>
@@ -228,6 +233,7 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
         teamId={selectedTeam}
         onClose={() => setSelectedTeam(null)}
       />
+      </div>
     </div>
   );
 }

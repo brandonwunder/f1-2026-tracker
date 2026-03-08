@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getCountdownValues } from "@/lib/utils/dates";
 
 interface CountdownTimerProps {
-  targetDate: string; // ISO date string, e.g. "2026-03-08T15:00:00Z"
+  targetDate: string;
   raceName: string;
 }
 
@@ -14,26 +14,29 @@ function AnimatedDigit({ value, label }: { value: number; label: string }) {
 
   return (
     <div className="text-center">
-      <div className="glass-card rounded-lg p-3 md:p-4 relative overflow-hidden">
-        {/* Subtle red glow behind the numbers */}
-        <div className="absolute inset-0 bg-f1-red/5 rounded-lg" />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-f1-red/10 to-transparent rounded-b-lg" />
-        <div className="relative">
-          <AnimatePresence mode="popLayout">
-            <motion.span
-              key={display}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="block text-3xl md:text-4xl font-bold text-f1-red tabular-nums font-orbitron"
-            >
-              {display}
-            </motion.span>
-          </AnimatePresence>
+      <div className="relative rounded-xl overflow-hidden">
+        <div className="glass-card p-3 md:p-4 relative overflow-hidden">
+          <div className="absolute inset-0 carbon-fiber opacity-20 pointer-events-none" />
+          <div className="absolute inset-0 bg-f1-red/5 rounded-xl" />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-f1-red/10 to-transparent rounded-b-xl" />
+          <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/30" />
+          <div className="relative">
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={display}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="block text-3xl md:text-5xl font-black text-f1-red tabular-nums font-orbitron"
+              >
+                {display}
+              </motion.span>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-      <div className="text-xs text-f1-muted uppercase tracking-wider mt-2">
+      <div className="text-[10px] text-f1-muted uppercase tracking-widest mt-2 font-bold">
         {label}
       </div>
     </div>
@@ -56,32 +59,33 @@ export default function CountdownTimer({
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  // Race has passed
   if (countdown.total < -3 * 60 * 60 * 1000) {
     return (
-      <div className="rounded-xl glass-card border border-f1-border p-6 text-center">
-        <p className="text-f1-muted text-sm uppercase tracking-wider mb-1">
-          {raceName}
-        </p>
-        <p className="text-lg font-semibold text-f1-muted">Race completed</p>
+      <div className="relative rounded-xl glass-card border border-f1-border overflow-hidden p-6 text-center">
+        <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
+        <div className="relative">
+          <p className="text-f1-muted text-sm uppercase tracking-widest mb-1 font-bold">
+            {raceName}
+          </p>
+          <p className="text-lg font-black text-f1-muted uppercase">Race completed</p>
+        </div>
       </div>
     );
   }
 
-  // Race window (within ~3 hours of start - approximate race duration)
   if (countdown.total <= 0) {
     return (
-      <div className="rounded-xl glass-card border border-f1-red/50 p-6 text-center relative overflow-hidden">
-        {/* Dramatic pulsing red glow for race in progress */}
+      <div className="relative rounded-xl glass-card border border-f1-red/50 overflow-hidden p-6 text-center">
+        <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
         <div className="absolute inset-0 animate-glow-pulse rounded-xl" />
         <div className="absolute inset-0 bg-f1-red/5" />
         <div className="relative">
-          <p className="text-f1-muted text-sm uppercase tracking-wider mb-1">
+          <p className="text-f1-muted text-sm uppercase tracking-widest mb-1 font-bold">
             {raceName}
           </p>
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-3">
             <span className="inline-block w-3 h-3 rounded-full bg-f1-red animate-pulse shadow-lg shadow-f1-red/50" />
-            <p className="text-xl font-bold text-f1-red font-orbitron tracking-wide">
+            <p className="text-xl md:text-2xl font-black text-f1-red font-orbitron tracking-wider">
               RACE IN PROGRESS
             </p>
             <span className="inline-block w-3 h-3 rounded-full bg-f1-red animate-pulse shadow-lg shadow-f1-red/50" />
@@ -99,15 +103,19 @@ export default function CountdownTimer({
   ];
 
   return (
-    <div className="rounded-xl glass-card border border-f1-border p-6">
-      <p className="text-f1-muted text-sm uppercase tracking-wider text-center mb-1">
-        Next Race
-      </p>
-      <p className="text-center text-lg font-semibold mb-4">{raceName}</p>
-      <div className="grid grid-cols-4 gap-3">
-        {units.map((unit) => (
-          <AnimatedDigit key={unit.label} value={unit.value} label={unit.label} />
-        ))}
+    <div className="relative rounded-xl glass-card border border-f1-border overflow-hidden p-6">
+      <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-f1-red/60 to-transparent" />
+      <div className="relative">
+        <p className="text-[10px] text-f1-red uppercase tracking-widest text-center mb-1 font-black">
+          Lights Out
+        </p>
+        <p className="text-center text-lg font-black mb-5 uppercase tracking-wide">{raceName}</p>
+        <div className="grid grid-cols-4 gap-3">
+          {units.map((unit) => (
+            <AnimatedDigit key={unit.label} value={unit.value} label={unit.label} />
+          ))}
+        </div>
       </div>
     </div>
   );

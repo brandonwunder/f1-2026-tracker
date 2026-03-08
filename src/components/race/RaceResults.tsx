@@ -126,8 +126,13 @@ export default function RaceResults({ results }: RaceResultsProps) {
   const sorted = [...finishers, ...dnfs];
 
   return (
-    <div className="rounded-xl glass-card border border-f1-border p-5">
-      <h3 className="text-lg font-bold mb-4">Race Results</h3>
+    <div className="relative rounded-xl glass-card border border-f1-border overflow-hidden">
+      {/* Racing stripe top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-f1-red/60 to-transparent" />
+      <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
+
+      <div className="relative p-5">
+      <h3 className="text-lg font-black uppercase tracking-wide mb-4">Race Results</h3>
 
       {/* Desktop table */}
       <div className="hidden md:block overflow-x-auto">
@@ -314,6 +319,7 @@ export default function RaceResults({ results }: RaceResultsProps) {
         teamId={selectedTeam}
         onClose={() => setSelectedTeam(null)}
       />
+      </div>
     </div>
   );
 }
