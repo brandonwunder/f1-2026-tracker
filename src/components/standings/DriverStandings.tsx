@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import type { DriverStanding } from '@/lib/api/types';
 import { TEAMS } from '@/lib/constants/teams';
-import { StaggeredList, StaggeredListItem } from '@/components/ui/MotionWrappers';
+import { motion } from 'framer-motion';
 import TeamLogo from '@/components/ui/TeamLogo';
+import { getDriverProfileImageUrl, getDriverCountryFlag } from '@/lib/utils/drivers';
 
 function getTeamColor(constructorId: string): string {
-  // Map Jolpica constructorId to our TEAMS keys
   const idMap: Record<string, string> = {
     red_bull: 'red_bull',
     ferrari: 'ferrari',
@@ -30,23 +31,32 @@ function getTeamColor(constructorId: string): string {
   return TEAMS[key]?.color ?? '#6B7280';
 }
 
-const MEDAL_COLORS: Record<number, string> = {
-  1: '#FFD700', // Gold
-  2: '#C0C0C0', // Silver
-  3: '#CD7F32', // Bronze
-};
+function getTeamKey(constructorId: string): string {
+  const idMap: Record<string, string> = {
+    rb: 'racing_bulls',
+    alphatauri: 'racing_bulls',
+    sauber: 'audi',
+    kick_sauber: 'audi',
+    andretti: 'cadillac',
+  };
+  return idMap[constructorId] ?? constructorId;
+}
 
-const MEDAL_GLOW: Record<number, string> = {
-  1: 'glow-gold',
-  2: 'glow-silver',
-  3: 'glow-bronze',
+const MEDAL_COLORS: Record<number, string> = {
+  1: '#FFD700',
+  2: '#C0C0C0',
+  3: '#CD7F32',
 };
 
 interface DriverStandingsProps {
   standings: DriverStanding[];
+  onDriverClick?: (driverId: string) => void;
+  onTeamClick?: (teamId: string) => void;
 }
 
-export default function DriverStandings({ standings }: DriverStandingsProps) {
+export default function DriverStandings({ standings, onDriverClick, onTeamClick }: DriverStandingsProps) {
+  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
+
   if (standings.length === 0) {
     return (
       <div className="glass-card rounded-xl p-6">
@@ -63,158 +73,164 @@ export default function DriverStandings({ standings }: DriverStandingsProps) {
   );
 
   return (
-    <div className="space-y-3">
-      {/* Desktop table */}
-      <div className="hidden md:block overflow-x-auto rounded-xl border border-f1-border glass-card">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="bg-f1-surface border-b border-f1-border text-f1-muted text-xs uppercase tracking-wider">
-              <th className="px-4 py-3 w-16">Pos</th>
-              <th className="px-4 py-3">Driver</th>
-              <th className="px-4 py-3">Team</th>
-              <th className="px-4 py-3 text-right">Wins</th>
-              <th className="px-4 py-3 text-right">Points</th>
-            </tr>
-          </thead>
-          <StaggeredList className="" >
-            <tbody>
-              {standings.map((entry) => {
-                const pos = parseInt(entry.position, 10);
-                const constructorId = entry.Constructors?.[0]?.constructorId ?? '';
-                const constructorName = entry.Constructors?.[0]?.name ?? 'Unknown';
-                const teamColor = getTeamColor(constructorId);
-                const medalColor = MEDAL_COLORS[pos];
-                const glowClass = MEDAL_GLOW[pos];
-                const barWidth = ((parseFloat(entry.points) || 0) / maxPoints) * 100;
+    <div className="space-y-2">
+      {standings.map((entry, i) => {
+        const pos = parseInt(entry.position, 10);
+        const constructorId = entry.Constructors?.[0]?.constructorId ?? '';
+        const constructorName = entry.Constructors?.[0]?.name ?? 'Unknown';
+        const teamColor = getTeamColor(constructorId);
+        const teamKey = getTeamKey(constructorId);
+        const medalColor = MEDAL_COLORS[pos];
+        const barWidth = ((parseFloat(entry.points) || 0) / maxPoints) * 100;
+        const flag = getDriverCountryFlag(entry.Driver.nationality);
+        const imageUrl = getDriverProfileImageUrl(
+          entry.Driver.driverId,
+          teamKey,
+          entry.Driver.givenName,
+          entry.Driver.familyName,
+        );
+        const hasImgError = imgErrors[entry.Driver.driverId];
 
-                return (
-                  <StaggeredListItem key={entry.Driver.driverId}>
-                    <tr
-                      className="border-b border-f1-border/50 hover:bg-f1-surface-hover transition-colors"
-                      style={{ borderLeftWidth: '4px', borderLeftColor: teamColor }}
-                    >
-                      <td className="px-4 py-3">
-                        {glowClass ? (
-                          <span
-                            className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-lg font-orbitron ${glowClass}`}
-                            style={{ color: medalColor }}
-                          >
-                            {entry.position}
-                          </span>
-                        ) : (
-                          <span className="font-bold text-lg font-orbitron text-white">
-                            {entry.position}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div>
-                          <span className="font-medium text-white">
-                            {entry.Driver.givenName}{' '}
-                            <span className="font-bold">{entry.Driver.familyName}</span>
-                          </span>
-                          {entry.Driver.code && (
-                            <span className="ml-2 text-xs text-f1-muted">
-                              {entry.Driver.code}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <TeamLogo teamId={constructorId} size={22} />
-                          <span className="text-f1-muted text-sm">{constructorName}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-right text-sm text-f1-muted">
-                        {entry.wins}
-                      </td>
-                      <td className="px-4 py-3 text-right relative">
-                        <div
-                          className="absolute inset-y-0 right-0 rounded-r-md bar-grow"
-                          style={{
-                            '--bar-width': `${barWidth}%`,
-                            backgroundColor: teamColor,
-                            opacity: 0.15,
-                          } as React.CSSProperties}
-                        />
-                        <span className="font-bold text-lg text-white font-orbitron relative z-10">
-                          {entry.points}
-                        </span>
-                      </td>
-                    </tr>
-                  </StaggeredListItem>
-                );
-              })}
-            </tbody>
-          </StaggeredList>
-        </table>
-      </div>
+        return (
+          <motion.div
+            key={entry.Driver.driverId}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.03, duration: 0.3 }}
+            className="group relative rounded-xl border border-f1-border/50 overflow-hidden hover:border-f1-border transition-all"
+            style={{
+              background: `linear-gradient(90deg, ${teamColor}08 0%, transparent 50%)`,
+            }}
+          >
+            {/* Team color accent */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-1"
+              style={{ backgroundColor: teamColor }}
+            />
 
-      {/* Mobile card layout */}
-      <StaggeredList className="md:hidden space-y-2">
-        {standings.map((entry) => {
-          const pos = parseInt(entry.position, 10);
-          const constructorId = entry.Constructors?.[0]?.constructorId ?? '';
-          const constructorName = entry.Constructors?.[0]?.name ?? 'Unknown';
-          const teamColor = getTeamColor(constructorId);
-          const medalColor = MEDAL_COLORS[pos];
-          const glowClass = MEDAL_GLOW[pos];
-          const barWidth = ((parseFloat(entry.points) || 0) / maxPoints) * 100;
+            <div className="flex items-center gap-3 md:gap-4 py-3 px-4 pl-5">
+              {/* Position */}
+              <div className="flex-shrink-0 w-10 text-center">
+                {medalColor ? (
+                  <div
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full font-black text-lg font-orbitron"
+                    style={{
+                      color: medalColor,
+                      background: `${medalColor}15`,
+                      boxShadow: `0 0 12px ${medalColor}20`,
+                    }}
+                  >
+                    {entry.position}
+                  </div>
+                ) : (
+                  <span className="font-bold text-lg font-orbitron text-f1-muted">
+                    {entry.position}
+                  </span>
+                )}
+              </div>
 
-          return (
-            <StaggeredListItem key={entry.Driver.driverId}>
+              {/* Driver photo */}
               <div
-                className="rounded-lg glass-card p-3 border border-f1-border/50"
-                style={{ borderLeftWidth: '4px', borderLeftColor: teamColor }}
+                className="hidden sm:block flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden"
+                style={{
+                  background: `linear-gradient(135deg, ${teamColor}30, transparent)`,
+                }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {glowClass ? (
-                      <span
-                        className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-lg font-orbitron ${glowClass}`}
-                        style={{ color: medalColor }}
-                      >
-                        {entry.position}
-                      </span>
-                    ) : (
-                      <span className="font-bold text-lg w-8 text-center font-orbitron text-white">
-                        {entry.position}
-                      </span>
-                    )}
-                    <div>
-                      <div className="font-medium text-white text-sm">
-                        {entry.Driver.givenName}{' '}
-                        <span className="font-bold">{entry.Driver.familyName}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <TeamLogo teamId={constructorId} size={16} />
-                        <span className="text-f1-muted text-xs">{constructorName}</span>
-                      </div>
-                    </div>
+                {!hasImgError ? (
+                  <img
+                    src={imageUrl}
+                    alt={`${entry.Driver.givenName} ${entry.Driver.familyName}`}
+                    className="w-full h-full object-cover object-top"
+                    onError={() => setImgErrors(prev => ({ ...prev, [entry.Driver.driverId]: true }))}
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center justify-center text-xs font-bold text-white"
+                    style={{ backgroundColor: teamColor }}
+                  >
+                    {entry.Driver.givenName.charAt(0)}{entry.Driver.familyName.charAt(0)}
                   </div>
-                  <div className="text-right relative">
-                    <div
-                      className="absolute inset-y-0 right-0 rounded-r-md bar-grow"
+                )}
+              </div>
+
+              {/* Driver info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onDriverClick?.(entry.Driver.driverId)}
+                    className="text-left hover:underline decoration-1 underline-offset-2 transition-colors"
+                    style={{ textDecorationColor: teamColor }}
+                  >
+                    <span className="text-sm md:text-base text-white font-medium">
+                      {entry.Driver.givenName}{' '}
+                      <span className="font-bold" style={{ color: teamColor }}>
+                        {entry.Driver.familyName}
+                      </span>
+                    </span>
+                  </button>
+                  {entry.Driver.code && (
+                    <span
+                      className="hidden md:inline text-[10px] px-1.5 py-0.5 rounded font-bold"
                       style={{
-                        '--bar-width': `${barWidth}%`,
-                        backgroundColor: teamColor,
-                        opacity: 0.15,
-                      } as React.CSSProperties}
-                    />
-                    <div className="font-bold text-lg text-white font-orbitron relative z-10">
-                      {entry.points}
-                    </div>
-                    <div className="text-xs text-f1-muted">
-                      {entry.wins} {parseInt(entry.wins, 10) === 1 ? 'win' : 'wins'}
-                    </div>
-                  </div>
+                        backgroundColor: `${teamColor}15`,
+                        color: teamColor,
+                      }}
+                    >
+                      {entry.Driver.code}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-sm">{flag}</span>
+                  <button
+                    onClick={() => onTeamClick?.(teamKey)}
+                    className="flex items-center gap-1.5 hover:underline decoration-1 underline-offset-2 transition-colors group/team"
+                  >
+                    <TeamLogo teamId={constructorId} size={14} />
+                    <span className="text-xs text-f1-muted group-hover/team:text-white transition-colors">
+                      {constructorName}
+                    </span>
+                  </button>
+                  {entry.Driver.permanentNumber && (
+                    <span className="text-xs text-f1-muted/50 font-orbitron">
+                      #{entry.Driver.permanentNumber}
+                    </span>
+                  )}
                 </div>
               </div>
-            </StaggeredListItem>
-          );
-        })}
-      </StaggeredList>
+
+              {/* Stats */}
+              <div className="hidden md:flex items-center gap-6 flex-shrink-0">
+                <div className="text-center">
+                  <p className="text-xs text-f1-muted uppercase tracking-wider">Wins</p>
+                  <p className="text-sm font-bold text-white font-orbitron">{entry.wins}</p>
+                </div>
+              </div>
+
+              {/* Points with bar */}
+              <div className="flex-shrink-0 w-24 md:w-32 relative text-right">
+                <div
+                  className="absolute inset-y-0 right-0 rounded-md transition-all duration-700"
+                  style={{
+                    width: `${barWidth}%`,
+                    backgroundColor: teamColor,
+                    opacity: 0.12,
+                  }}
+                />
+                <div className="relative z-10">
+                  <span className="font-black text-lg md:text-xl text-white font-orbitron">
+                    {entry.points}
+                  </span>
+                  <span className="text-[10px] text-f1-muted ml-1 uppercase">pts</span>
+                </div>
+                <div className="md:hidden text-[10px] text-f1-muted relative z-10">
+                  {entry.wins} {parseInt(entry.wins, 10) === 1 ? 'win' : 'wins'}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
     </div>
   );
 }

@@ -2,38 +2,39 @@
 
 import { useState } from "react";
 
-// F1 official race event images from the Formula 1 CDN
+// F1 official race header images from the Formula 1 CDN
+// Uses the 16x9 Racehub header format with proper country names
 const GP_IMAGE_SLUGS: Record<string, string> = {
-  "Australian Grand Prix": "australia",
-  "Chinese Grand Prix": "china",
-  "Japanese Grand Prix": "japan",
-  "Bahrain Grand Prix": "bahrain",
-  "Saudi Arabian Grand Prix": "saudi-arabia",
-  "Miami Grand Prix": "miami",
-  "Canadian Grand Prix": "canada",
-  "Monaco Grand Prix": "monaco",
-  "Barcelona Grand Prix": "spain",
-  "Austrian Grand Prix": "austria",
-  "British Grand Prix": "great-britain",
-  "Belgian Grand Prix": "belgium",
-  "Hungarian Grand Prix": "hungary",
-  "Dutch Grand Prix": "netherlands",
-  "Italian Grand Prix": "italy",
-  "Madrid Grand Prix": "spain",
-  "Azerbaijan Grand Prix": "azerbaijan",
-  "Singapore Grand Prix": "singapore",
-  "United States Grand Prix": "united-states",
-  "Mexico City Grand Prix": "mexico",
-  "Brazilian Grand Prix": "brazil",
-  "Las Vegas Grand Prix": "las-vegas",
-  "Qatar Grand Prix": "qatar",
-  "Abu Dhabi Grand Prix": "abu-dhabi",
+  "Australian Grand Prix": "Australia",
+  "Chinese Grand Prix": "China",
+  "Japanese Grand Prix": "Japan",
+  "Bahrain Grand Prix": "Bahrain",
+  "Saudi Arabian Grand Prix": "Saudi%20Arabia",
+  "Miami Grand Prix": "Miami",
+  "Canadian Grand Prix": "Canada",
+  "Monaco Grand Prix": "Monaco",
+  "Barcelona Grand Prix": "Spain",
+  "Austrian Grand Prix": "Austria",
+  "British Grand Prix": "Great%20Britain",
+  "Belgian Grand Prix": "Belgium",
+  "Hungarian Grand Prix": "Hungary",
+  "Dutch Grand Prix": "Netherlands",
+  "Italian Grand Prix": "Italy",
+  "Madrid Grand Prix": "Spain",
+  "Azerbaijan Grand Prix": "Azerbaijan",
+  "Singapore Grand Prix": "Singapore",
+  "United States Grand Prix": "USA",
+  "Mexico City Grand Prix": "Mexico",
+  "Brazilian Grand Prix": "Brazil",
+  "Las Vegas Grand Prix": "Las%20Vegas",
+  "Qatar Grand Prix": "Qatar",
+  "Abu Dhabi Grand Prix": "Abu%20Dhabi",
 };
 
 function getGPImageUrl(raceName: string): string | null {
   const slug = GP_IMAGE_SLUGS[raceName];
   if (!slug) return null;
-  return `https://media.formula1.com/image/upload/f_auto,c_limit,w_288,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${slug}`;
+  return `https://media.formula1.com/image/upload/f_auto,c_limit,w_288,q_auto/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${slug}`;
 }
 
 interface GPLogoProps {

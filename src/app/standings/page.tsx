@@ -2,8 +2,7 @@ import { getDriverStandings, getConstructorStandings } from '@/lib/api/jolpica';
 import type { DriverStanding, ConstructorStanding } from '@/lib/api/types';
 import { getAllDriverProfiles } from '@/lib/data/driver-profiles';
 import { TEAMS } from '@/lib/constants/teams';
-import DriverStandings from '@/components/standings/DriverStandings';
-import ConstructorStandings from '@/components/standings/ConstructorStandings';
+import StandingsClient from '@/components/standings/StandingsClient';
 import { PageTransition } from '@/components/ui/MotionWrappers';
 import PageBackground from '@/components/ui/PageBackground';
 
@@ -60,7 +59,7 @@ export default async function StandingsPage() {
     getConstructorStandings(),
   ]);
 
-  // Use API data if available, otherwise show pre-season standings
+  const isPreSeason = apiDriverStandings.length === 0;
   const driverStandings = apiDriverStandings.length > 0
     ? apiDriverStandings
     : buildPreSeasonDriverStandings();
@@ -70,57 +69,28 @@ export default async function StandingsPage() {
 
   return (
     <>
-    <PageBackground page="standings" />
-    <PageTransition>
-      <div className="space-y-8">
-        {/* Page header — broadcast style */}
-        <div className="relative">
-          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-f1-red rounded-full shadow-[0_0_12px_rgba(225,6,0,0.4)]" />
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight">
-            <span className="text-f1-red">CHAMPIONSHIP</span> STANDINGS
-          </h1>
-          <p className="text-f1-muted text-sm mt-1 font-medium tracking-wide uppercase">
-            2026 Season Leaderboard
-          </p>
-        </div>
-        <div className="broadcast-divider" />
-
-        {/* Pre-season notice */}
-        {apiDriverStandings.length === 0 && (
-          <div className="relative rounded-xl glass-card border border-yellow-500/20 overflow-hidden p-4">
-            <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
-            <div className="relative flex items-center gap-3">
-              <span className="text-2xl">&#x1F3C1;</span>
-              <div>
-                <p className="text-sm font-bold text-yellow-400">Pre-Season Standings</p>
-                <p className="text-xs text-f1-muted mt-0.5">
-                  The 2026 season hasn&apos;t started yet. All drivers and teams begin at 0 points. Standings will update automatically after each race.
-                </p>
-              </div>
-            </div>
+      <PageBackground page="standings" />
+      <PageTransition>
+        <div className="space-y-8">
+          {/* Page header — broadcast style */}
+          <div className="relative">
+            <div className="absolute -left-4 top-0 bottom-0 w-1 bg-f1-red rounded-full shadow-[0_0_12px_rgba(225,6,0,0.4)]" />
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+              <span className="text-f1-red">CHAMPIONSHIP</span> STANDINGS
+            </h1>
+            <p className="text-f1-muted text-sm mt-1 font-medium tracking-wide uppercase">
+              2026 Season Leaderboard
+            </p>
           </div>
-        )}
+          <div className="broadcast-divider" />
 
-        {/* Driver Championship */}
-        <section className="space-y-3">
-          <h2 className="text-lg md:text-xl font-black uppercase tracking-wide text-white">
-            Driver Championship
-          </h2>
-          <DriverStandings standings={driverStandings} />
-        </section>
-
-        {/* Constructor Championship */}
-        <section className="space-y-3">
-          <h2 className="text-lg md:text-xl font-black uppercase tracking-wide text-white">
-            Constructor Championship
-          </h2>
-          <ConstructorStandings
-            standings={constructorStandings}
+          <StandingsClient
             driverStandings={driverStandings}
+            constructorStandings={constructorStandings}
+            isPreSeason={isPreSeason}
           />
-        </section>
-      </div>
-    </PageTransition>
+        </div>
+      </PageTransition>
     </>
   );
 }

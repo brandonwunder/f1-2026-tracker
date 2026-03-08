@@ -6,15 +6,15 @@
  */
 
 const BACKGROUNDS: Record<string, string> = {
-  // Dashboard — F1 car on track, dramatic angle
-  dashboard: 'https://images.unsplash.com/photo-1532906619279-a4b7267faa72?w=1920&q=80',
-  // Drivers — pit lane / helmets vibe
-  drivers: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=80',
+  // Dashboard — race car on track
+  dashboard: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=80',
+  // Drivers — racing action
+  drivers: 'https://images.unsplash.com/photo-1541889413-d34ae41278b3?w=1920&q=80',
   // Calendar — aerial track shot
   calendar: 'https://images.unsplash.com/photo-1504817343863-5092a923803e?w=1920&q=80',
-  // Standings — podium / trophy feel
-  standings: 'https://images.unsplash.com/photo-1541889413-d34ae41278b3?w=1920&q=80',
-  // Predictions — data / strategy vibe
+  // Standings — podium / celebration
+  standings: 'https://images.unsplash.com/photo-1532906619279-a4b7267faa72?w=1920&q=80',
+  // Predictions — strategy / data
   predictions: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=1920&q=80',
 };
 
