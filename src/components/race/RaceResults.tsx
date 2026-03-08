@@ -6,6 +6,8 @@ import type { RaceResult } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import TeamLogo from "@/components/ui/TeamLogo";
 import DriverProfileModal from "./DriverProfileModal";
+import TeamProfileModal from "./TeamProfileModal";
+import { getTeamIdFromConstructor } from "@/lib/utils/drivers";
 
 interface RaceResultsProps {
   results: RaceResult[];
@@ -97,6 +99,7 @@ const rowVariants: Variants = {
 
 export default function RaceResults({ results }: RaceResultsProps) {
   const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
   if (!results || results.length === 0) {
     return (
@@ -181,10 +184,13 @@ export default function RaceResults({ results }: RaceResultsProps) {
                     </div>
                   </td>
                   <td className="py-2.5 px-2 text-f1-muted">
-                    <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setSelectedTeam(getTeamIdFromConstructor(result.Constructor.constructorId))}
+                      className="flex items-center gap-1.5 hover:text-white cursor-pointer transition-colors"
+                    >
                       <TeamLogo teamId={result.Constructor.constructorId} size={20} />
-                      {result.Constructor.name}
-                    </div>
+                      <span className="hover:underline">{result.Constructor.name}</span>
+                    </button>
                   </td>
                   <td className="py-2.5 px-2 text-right font-mono text-xs">
                     {pos === 1
@@ -271,10 +277,13 @@ export default function RaceResults({ results }: RaceResultsProps) {
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-1 text-f1-muted text-xs truncate">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setSelectedTeam(getTeamIdFromConstructor(result.Constructor.constructorId)); }}
+                  className="flex items-center gap-1 text-f1-muted text-xs truncate hover:text-white cursor-pointer transition-colors"
+                >
                   <TeamLogo teamId={result.Constructor.constructorId} size={14} />
                   {result.Constructor.name}
-                </div>
+                </button>
               </div>
               <div className="text-right shrink-0">
                 <div className="font-mono text-xs">
@@ -300,6 +309,10 @@ export default function RaceResults({ results }: RaceResultsProps) {
       <DriverProfileModal
         driverId={selectedDriver}
         onClose={() => setSelectedDriver(null)}
+      />
+      <TeamProfileModal
+        teamId={selectedTeam}
+        onClose={() => setSelectedTeam(null)}
       />
     </div>
   );

@@ -9,7 +9,7 @@ interface RaceStatusBannerProps {
   hasRaceResults: boolean;
 }
 
-type WeekendStatus = 'upcoming' | 'qualifying-done' | 'race-day' | 'completed' | 'past';
+type WeekendStatus = 'upcoming' | 'qualifying-done' | 'race-day' | 'completed' | 'waiting';
 
 function getWeekendStatus(
   raceDate: string,
@@ -21,11 +21,17 @@ function getWeekendStatus(
 
   const now = new Date();
   const raceStart = new Date(`${raceDate}T${raceTime}`);
-  const raceEnd = new Date(raceStart.getTime() + 3 * 60 * 60 * 1000); // +3h buffer
+  const raceEnd = new Date(raceStart.getTime() + 3 * 60 * 60 * 1000);
 
-  if (now > raceEnd && !hasRaceResults) return 'past';
+  // If qualifying is done but no race results yet, check timing
+  if (hasQualifying && !hasRaceResults) {
+    if (now >= raceStart && now <= raceEnd) return 'race-day';
+    if (now > raceEnd) return 'waiting';
+    return 'qualifying-done';
+  }
+
+  // No qualifying data yet
   if (now >= raceStart) return 'race-day';
-  if (hasQualifying) return 'qualifying-done';
   return 'upcoming';
 }
 
@@ -38,49 +44,40 @@ const STATUS_CONFIG: Record<WeekendStatus, {
 }> = {
   upcoming: {
     label: 'UPCOMING',
-    description: 'Race weekend has not started yet',
+    description: 'Race weekend has not started yet.',
     bgClass: 'bg-blue-500/10 border-blue-500/30',
     dotClass: 'bg-blue-500',
     icon: '\u{1F4C5}',
   },
   'qualifying-done': {
     label: 'QUALIFYING COMPLETE',
-    description: 'Qualifying has finished \u2014 grid is set! Race has NOT started yet.',
+    description: 'Qualifying is done \u2014 the starting grid is set! Waiting for the race.',
     bgClass: 'bg-yellow-500/10 border-yellow-500/30',
     dotClass: 'bg-yellow-500 animate-pulse',
     icon: '\u{1F3C1}',
   },
   'race-day': {
-    label: 'RACE DAY',
-    description: 'The race is happening now or about to start! Results will appear once the race finishes.',
+    label: 'RACE IN PROGRESS',
+    description: 'The race is happening now! Results will appear once it finishes.',
     bgClass: 'bg-f1-red/10 border-f1-red/30',
     dotClass: 'bg-f1-red animate-pulse',
     icon: '\u{1F3CE}\u{FE0F}',
   },
   completed: {
     label: 'RACE COMPLETE',
-    description: 'The race has finished. Final results are in.',
+    description: 'The race has finished. Final results are in!',
     bgClass: 'bg-green-500/10 border-green-500/30',
     dotClass: 'bg-green-500',
     icon: '\u2705',
   },
-  past: {
-    label: 'AWAITING RESULTS',
-    description: 'The race should be finished. Results will appear shortly.',
+  waiting: {
+    label: 'WAITING FOR RESULTS',
+    description: 'The race has likely finished. Results will appear here as soon as they are available.',
     bgClass: 'bg-orange-500/10 border-orange-500/30',
     dotClass: 'bg-orange-500 animate-pulse',
     icon: '\u23F3',
   },
 };
-
-/** Which steps are done for the progress bar */
-function getCompletedSteps(status: WeekendStatus, hasQualifying: boolean) {
-  return {
-    practice: status !== 'upcoming',
-    qualifying: hasQualifying,
-    race: status === 'completed',
-  };
-}
 
 export default function RaceStatusBanner({
   raceDate,
@@ -101,7 +98,6 @@ export default function RaceStatusBanner({
   }, [raceDate, raceTime, hasQualifying, hasRaceResults]);
 
   const config = STATUS_CONFIG[status];
-  const steps = getCompletedSteps(status, hasQualifying);
 
   return (
     <div className={`rounded-xl border p-4 ${config.bgClass}`}>
@@ -120,16 +116,16 @@ export default function RaceStatusBanner({
 
       {/* Weekend Progress Bar */}
       <div className="mt-3 flex items-center gap-1">
-        <ProgressStep label="Practice" done={steps.practice} active={status === 'upcoming'} />
-        <ProgressConnector done={steps.qualifying} />
-        <ProgressStep label="Qualifying" done={steps.qualifying} active={!steps.qualifying && steps.practice} />
-        <ProgressConnector done={steps.race} />
+        <ProgressStep
+          label="Qualifying"
+          done={hasQualifying}
+          active={!hasQualifying && status === 'upcoming'}
+        />
+        <ProgressConnector done={hasRaceResults} />
         <ProgressStep
           label="Race"
-          done={steps.race}
-          active={
-            (status === 'race-day' || status === 'past') && !steps.race
-          }
+          done={hasRaceResults}
+          active={hasQualifying && !hasRaceResults}
         />
       </div>
     </div>
@@ -140,7 +136,7 @@ function ProgressStep({ label, done, active }: { label: string; done: boolean; a
   return (
     <div className="flex flex-col items-center gap-1 flex-1">
       <div
-        className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border-2 transition-all ${
+        className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold border-2 transition-all ${
           done
             ? 'bg-green-500 border-green-500 text-white'
             : active
