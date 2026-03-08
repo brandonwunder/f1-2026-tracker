@@ -2,6 +2,7 @@ import { getRaceResults, getQualifyingResults } from "@/lib/api/jolpica";
 import { CALENDAR_2026 } from "@/lib/data/calendar-fallback";
 import { getCircuitByName } from "@/lib/data/circuits";
 import { formatRaceDateLong, getCountryFlag } from "@/lib/utils/dates";
+import GPLogo from "@/components/race/GPLogo";
 import CircuitInfo from "@/components/race/CircuitInfo";
 import CircuitMap from "@/components/race/CircuitMap";
 import QualifyingResults from "@/components/race/QualifyingResults";
@@ -87,10 +88,12 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
                     {formatRaceDateLong(raceInfo.date)}
                   </span>
                 </div>
-                <h1 className="text-2xl md:text-3xl font-black tracking-tight">
-                  <span className="text-3xl md:text-4xl mr-2">{flag}</span>
-                  {raceInfo.raceName}
-                </h1>
+                <div className="flex items-center gap-3">
+                  <GPLogo raceName={raceInfo.raceName} fallbackFlag={flag} size="lg" />
+                  <h1 className="text-2xl md:text-3xl font-black tracking-tight">
+                    {raceInfo.raceName}
+                  </h1>
+                </div>
                 <p className="text-f1-muted text-sm mt-1 font-medium">
                   {raceInfo.circuitName} &middot; {raceInfo.locality}, {raceInfo.country}
                 </p>

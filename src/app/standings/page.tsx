@@ -1,14 +1,72 @@
 import { getDriverStandings, getConstructorStandings } from '@/lib/api/jolpica';
+import type { DriverStanding, ConstructorStanding } from '@/lib/api/types';
+import { getAllDriverProfiles } from '@/lib/data/driver-profiles';
+import { TEAMS } from '@/lib/constants/teams';
 import DriverStandings from '@/components/standings/DriverStandings';
 import ConstructorStandings from '@/components/standings/ConstructorStandings';
 import { PageTransition } from '@/components/ui/MotionWrappers';
 import PageBackground from '@/components/ui/PageBackground';
 
+/**
+ * Build pre-season driver standings from hardcoded profiles.
+ * All drivers start at 0 points, ordered by team.
+ */
+function buildPreSeasonDriverStandings(): DriverStanding[] {
+  const profiles = getAllDriverProfiles();
+  return profiles.map((p, i) => {
+    const team = TEAMS[p.teamId];
+    return {
+      position: String(i + 1),
+      positionText: String(i + 1),
+      points: '0',
+      wins: '0',
+      Driver: {
+        driverId: p.driverId,
+        permanentNumber: String(p.number),
+        code: p.code,
+        givenName: p.firstName,
+        familyName: p.lastName,
+        dateOfBirth: p.dateOfBirth,
+        nationality: p.nationality,
+      },
+      Constructors: [{
+        constructorId: p.teamId,
+        name: team?.name ?? p.teamId,
+      }],
+    };
+  });
+}
+
+/**
+ * Build pre-season constructor standings from TEAMS constant.
+ */
+function buildPreSeasonConstructorStandings(): ConstructorStanding[] {
+  const teamIds = Object.keys(TEAMS);
+  return teamIds.map((id, i) => ({
+    position: String(i + 1),
+    positionText: String(i + 1),
+    points: '0',
+    wins: '0',
+    Constructor: {
+      constructorId: id,
+      name: TEAMS[id].name,
+    },
+  }));
+}
+
 export default async function StandingsPage() {
-  const [driverStandings, constructorStandings] = await Promise.all([
+  const [apiDriverStandings, apiConstructorStandings] = await Promise.all([
     getDriverStandings(),
     getConstructorStandings(),
   ]);
+
+  // Use API data if available, otherwise show pre-season standings
+  const driverStandings = apiDriverStandings.length > 0
+    ? apiDriverStandings
+    : buildPreSeasonDriverStandings();
+  const constructorStandings = apiConstructorStandings.length > 0
+    ? apiConstructorStandings
+    : buildPreSeasonConstructorStandings();
 
   return (
     <>
@@ -26,6 +84,22 @@ export default async function StandingsPage() {
           </p>
         </div>
         <div className="broadcast-divider" />
+
+        {/* Pre-season notice */}
+        {apiDriverStandings.length === 0 && (
+          <div className="relative rounded-xl glass-card border border-yellow-500/20 overflow-hidden p-4">
+            <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
+            <div className="relative flex items-center gap-3">
+              <span className="text-2xl">&#x1F3C1;</span>
+              <div>
+                <p className="text-sm font-bold text-yellow-400">Pre-Season Standings</p>
+                <p className="text-xs text-f1-muted mt-0.5">
+                  The 2026 season hasn&apos;t started yet. All drivers and teams begin at 0 points. Standings will update automatically after each race.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Driver Championship */}
         <section className="space-y-3">

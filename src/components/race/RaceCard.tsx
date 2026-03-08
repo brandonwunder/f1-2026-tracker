@@ -7,6 +7,7 @@ import {
   getCountryFlag,
   type RaceStatus,
 } from "@/lib/utils/dates";
+import GPLogo from "@/components/race/GPLogo";
 
 interface RaceCardProps {
   round: string;
@@ -90,9 +91,9 @@ export default function RaceCard({
             Round {round}
           </div>
 
-          {/* Country flag + race name */}
-          <div className="flex items-start gap-2 mb-1">
-            <span className="text-2xl leading-none mt-0.5">{flag}</span>
+          {/* GP image + race name */}
+          <div className="flex items-start gap-2.5 mb-1">
+            <GPLogo raceName={raceName} fallbackFlag={flag} size="sm" />
             <div className="min-w-0 flex-1">
               <h3 className="font-black text-sm leading-tight truncate text-white">
                 {raceName}

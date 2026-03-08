@@ -62,20 +62,20 @@ export default function PageBackground({ page, circuitLocality }: PageBackground
 
   return (
     <>
-      {/* Background image — fixed, very faded */}
+      {/* Background image — fixed, visible but not overpowering */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
         style={{
           backgroundImage: `url(${imageUrl})`,
-          opacity: 0.07,
+          opacity: 0.22,
           zIndex: -2,
         }}
       />
-      {/* Gradient overlay to darken bottom */}
+      {/* Gradient overlay — gentle fade so image stays visible */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, rgba(10,10,18,0.2) 0%, rgba(10,10,18,0.6) 30%, rgba(10,10,18,0.95) 70%)',
+          background: 'linear-gradient(180deg, rgba(10,10,18,0.1) 0%, rgba(10,10,18,0.4) 40%, rgba(10,10,18,0.85) 80%)',
           zIndex: -1,
         }}
       />

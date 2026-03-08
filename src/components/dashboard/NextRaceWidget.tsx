@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getCountryFlag, formatRaceDateLong } from "@/lib/utils/dates";
 import CountdownTimer from "@/components/race/CountdownTimer";
+import GPLogo from "@/components/race/GPLogo";
 import { motion } from "framer-motion";
 
 interface NextRaceWidgetProps {
@@ -66,7 +67,7 @@ export default function NextRaceWidget({
 
           {/* Race info */}
           <div className="flex items-start gap-4 mb-6">
-            <span className="text-5xl leading-none drop-shadow-lg">{flag}</span>
+            <GPLogo raceName={raceName} fallbackFlag={flag} size="lg" />
             <div className="min-w-0 flex-1">
               <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight drop-shadow-sm">
                 {raceName}
