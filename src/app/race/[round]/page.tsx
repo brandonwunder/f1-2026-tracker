@@ -10,6 +10,7 @@ import RaceStatusBanner from "@/components/race/RaceStatusBanner";
 import PredictionPanel from "@/components/predictions/PredictionPanel";
 import Link from "next/link";
 import { PageTransition } from "@/components/ui/MotionWrappers";
+import PageBackground from "@/components/ui/PageBackground";
 
 interface RaceDetailPageProps {
   params: Promise<{ round: string }>;
@@ -56,6 +57,8 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
   })();
 
   return (
+    <>
+    <PageBackground circuitLocality={raceInfo.locality} />
     <PageTransition>
       <div className="space-y-6 max-w-7xl mx-auto">
         {/* Back navigation */}
@@ -133,10 +136,10 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
             />
           </div>
 
-          {/* Right column - Results */}
+          {/* Right column - Results (race first, then qualifying) */}
           <div className="lg:col-span-2 space-y-6">
-            <QualifyingResults results={qualifyingData?.QualifyingResults ?? []} />
             <RaceResults results={raceData?.Results ?? []} />
+            <QualifyingResults results={qualifyingData?.QualifyingResults ?? []} />
           </div>
         </div>
 
@@ -166,5 +169,6 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
         </div>
       </div>
     </PageTransition>
+    </>
   );
 }

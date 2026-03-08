@@ -14,6 +14,7 @@ import PredictionScoreWidget from "@/components/dashboard/PredictionScoreWidget"
 import QuickLinks from "@/components/dashboard/QuickLinks";
 import LightsOut from "@/components/dashboard/LightsOut";
 import { PageTransition } from "@/components/ui/MotionWrappers";
+import PageBackground from "@/components/ui/PageBackground";
 
 export default async function DashboardPage() {
   const [driverStandings, constructorStandings, apiCalendar] =
@@ -53,6 +54,7 @@ export default async function DashboardPage() {
 
   return (
     <LightsOut>
+      <PageBackground page="dashboard" />
       <PageTransition>
         <div className="space-y-8">
           {/* Page header */}

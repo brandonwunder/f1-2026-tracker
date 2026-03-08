@@ -20,6 +20,7 @@ import AccuracyStats from "@/components/predictions/AccuracyStats";
 import ScoreGraph from "@/components/predictions/ScoreGraph";
 import RaceBreakdown from "@/components/predictions/RaceBreakdown";
 import PlayerSwitcher from "@/components/predictions/PlayerSwitcher";
+import PageBackground from "@/components/ui/PageBackground";
 
 // =============================================================================
 // Fetch race results for all completed rounds (client-side)
@@ -136,6 +137,8 @@ export default function PredictionsPage() {
 
   if (loading) {
     return (
+      <>
+      <PageBackground page="predictions" />
       <PageTransition>
         <div className="space-y-6">
           <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
@@ -150,6 +153,7 @@ export default function PredictionsPage() {
           <div className="rounded-xl bg-f1-surface border border-f1-border p-6 skeleton-shimmer h-72" />
         </div>
       </PageTransition>
+      </>
     );
   }
 
@@ -159,6 +163,8 @@ export default function PredictionsPage() {
 
   if (predictions.length === 0) {
     return (
+      <>
+      <PageBackground page="predictions" />
       <PageTransition>
         <div className="space-y-6">
           <div className="flex items-center justify-between flex-wrap gap-3">
@@ -181,6 +187,7 @@ export default function PredictionsPage() {
           </div>
         </div>
       </PageTransition>
+      </>
     );
   }
 
@@ -192,6 +199,8 @@ export default function PredictionsPage() {
   const totalPoints = seasonScore?.totalPoints ?? 0;
 
   return (
+    <>
+    <PageBackground page="predictions" />
     <PageTransition>
       <div className="space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
@@ -240,6 +249,7 @@ export default function PredictionsPage() {
         )}
       </div>
     </PageTransition>
+    </>
   );
 }
 

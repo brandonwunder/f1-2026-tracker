@@ -7,6 +7,7 @@ import {
   getRaceStatus,
 } from "@/lib/utils/dates";
 import { PageTransition, StaggeredGrid, StaggeredItem } from "@/components/ui/MotionWrappers";
+import PageBackground from "@/components/ui/PageBackground";
 
 export const metadata = {
   title: "Race Calendar | F1 2026 Tracker",
@@ -38,6 +39,8 @@ export default async function CalendarPage() {
   const progressPercent = totalRaces > 0 ? (completedRaces / totalRaces) * 100 : 0;
 
   return (
+    <>
+    <PageBackground page="calendar" />
     <PageTransition>
       <div className="space-y-8">
         {/* Page header — broadcast style */}
@@ -118,5 +121,6 @@ export default async function CalendarPage() {
         )}
       </div>
     </PageTransition>
+    </>
   );
 }

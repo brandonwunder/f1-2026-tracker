@@ -185,10 +185,13 @@ export default function PredictionPanel({
   const handleSave = useCallback(() => {
     if (!p1 || !p2 || !p3) return;
     savePrediction(round, p1, p2, p3);
+    // Immediately lock after saving — predictions cannot be changed once submitted
+    lockPrediction(round);
     const updated = getPrediction(round);
     setPrediction(updated);
+    setLocked(true);
     setSaved(true);
-    showToast("Prediction saved!");
+    showToast("Prediction locked in! No take-backs!");
     setTimeout(() => setSaved(false), 2000);
 
     // Fire confetti from save button position

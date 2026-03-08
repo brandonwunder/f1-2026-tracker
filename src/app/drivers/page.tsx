@@ -4,6 +4,7 @@ import { getAllDriverProfiles } from '@/lib/data/driver-profiles';
 import { TEAMS } from '@/lib/constants/teams';
 import DriverGrid from '@/components/drivers/DriverGrid';
 import { PageTransition } from '@/components/ui/MotionWrappers';
+import PageBackground from '@/components/ui/PageBackground';
 
 /**
  * Build a DriverStanding-compatible object from our hardcoded profile data.
@@ -67,6 +68,8 @@ export default async function DriversPage() {
   }
 
   return (
+    <>
+    <PageBackground page="drivers" />
     <PageTransition>
       <div className="space-y-6">
         <div className="relative">
@@ -83,5 +86,6 @@ export default async function DriversPage() {
         <DriverGrid standings={displayStandings} />
       </div>
     </PageTransition>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import { getDriverStandings, getConstructorStandings } from '@/lib/api/jolpica';
 import DriverStandings from '@/components/standings/DriverStandings';
 import ConstructorStandings from '@/components/standings/ConstructorStandings';
 import { PageTransition } from '@/components/ui/MotionWrappers';
+import PageBackground from '@/components/ui/PageBackground';
 
 export default async function StandingsPage() {
   const [driverStandings, constructorStandings] = await Promise.all([
@@ -10,6 +11,8 @@ export default async function StandingsPage() {
   ]);
 
   return (
+    <>
+    <PageBackground page="standings" />
     <PageTransition>
       <div className="space-y-8">
         {/* Page header — broadcast style */}
@@ -44,5 +47,6 @@ export default async function StandingsPage() {
         </section>
       </div>
     </PageTransition>
+    </>
   );
 }
