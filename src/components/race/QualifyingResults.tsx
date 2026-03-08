@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
 import type { QualifyingResult } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import TeamLogo from "@/components/ui/TeamLogo";
+import DriverProfileModal from "./DriverProfileModal";
 
 interface QualifyingResultsProps {
   results: QualifyingResult[];
@@ -54,6 +56,8 @@ const rowVariants: Variants = {
 };
 
 export default function QualifyingResults({ results }: QualifyingResultsProps) {
+  const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
+
   if (!results || results.length === 0) {
     return (
       <div className="rounded-xl glass-card border border-f1-border p-6">
@@ -65,7 +69,12 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
 
   return (
     <div className="rounded-xl glass-card border border-f1-border p-5">
-      <h3 className="text-lg font-bold mb-4">Qualifying Results</h3>
+      <div className="flex items-center gap-2 mb-4">
+        <h3 className="text-lg font-bold">Qualifying Results</h3>
+        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+          Complete
+        </span>
+      </div>
 
       {/* Desktop table */}
       <div className="hidden md:block overflow-x-auto">
@@ -113,10 +122,13 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                         className="w-1 h-5 rounded-full shrink-0"
                         style={{ backgroundColor: teamColor }}
                       />
-                      <span className="font-medium">
+                      <button
+                        onClick={() => setSelectedDriver(result.Driver.driverId)}
+                        className="font-medium hover:underline hover:text-white/90 cursor-pointer text-left transition-colors"
+                      >
                         {result.Driver.givenName}{" "}
                         <span className="font-bold">{result.Driver.familyName}</span>
-                      </span>
+                      </button>
                     </div>
                   </td>
                   <td className="py-2.5 px-2 text-f1-muted">
@@ -174,10 +186,13 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                 {result.position}
               </span>
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-sm truncate">
+                <button
+                  onClick={() => setSelectedDriver(result.Driver.driverId)}
+                  className="font-medium text-sm truncate hover:underline cursor-pointer text-left transition-colors"
+                >
                   {result.Driver.givenName}{" "}
                   <span className="font-bold">{result.Driver.familyName}</span>
-                </div>
+                </button>
                 <div className="flex items-center gap-1 text-f1-muted text-xs truncate">
                   <TeamLogo teamId={result.Constructor.constructorId} size={14} />
                   {result.Constructor.name}
@@ -195,6 +210,11 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
           );
         })}
       </motion.div>
+
+      <DriverProfileModal
+        driverId={selectedDriver}
+        onClose={() => setSelectedDriver(null)}
+      />
     </div>
   );
 }

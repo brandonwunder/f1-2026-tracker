@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
 import type { RaceResult } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import TeamLogo from "@/components/ui/TeamLogo";
+import DriverProfileModal from "./DriverProfileModal";
 
 interface RaceResultsProps {
   results: RaceResult[];
@@ -94,11 +96,23 @@ const rowVariants: Variants = {
 };
 
 export default function RaceResults({ results }: RaceResultsProps) {
+  const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
+
   if (!results || results.length === 0) {
     return (
-      <div className="rounded-xl glass-card border border-f1-border p-6">
-        <h3 className="text-lg font-bold mb-2">Race Results</h3>
-        <p className="text-f1-muted text-sm">Race results not yet available.</p>
+      <div className="rounded-xl glass-card border border-yellow-500/30 p-6 bg-yellow-500/5">
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="text-lg font-bold">Race Results</h3>
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+            Not Started
+          </span>
+        </div>
+        <p className="text-f1-muted text-sm">
+          The race has not happened yet. Results will appear here after the race finishes.
+        </p>
+        <p className="text-yellow-400/80 text-xs mt-2 font-medium">
+          Note: Qualifying results above show the starting grid order, NOT race results.
+        </p>
       </div>
     );
   }
@@ -157,10 +171,13 @@ export default function RaceResults({ results }: RaceResultsProps) {
                         className="w-1 h-5 rounded-full shrink-0"
                         style={{ backgroundColor: teamColor }}
                       />
-                      <span className={`font-medium ${dnf ? "line-through decoration-red-500/50" : ""}`}>
+                      <button
+                        onClick={() => setSelectedDriver(result.Driver.driverId)}
+                        className={`font-medium hover:underline cursor-pointer text-left transition-colors ${dnf ? "line-through decoration-red-500/50" : ""}`}
+                      >
                         {result.Driver.givenName}{" "}
                         <span className="font-bold">{result.Driver.familyName}</span>
-                      </span>
+                      </button>
                     </div>
                   </td>
                   <td className="py-2.5 px-2 text-f1-muted">
@@ -241,10 +258,13 @@ export default function RaceResults({ results }: RaceResultsProps) {
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className={`font-medium text-sm truncate ${dnf ? "line-through decoration-red-500/50" : ""}`}>
+                  <button
+                    onClick={() => setSelectedDriver(result.Driver.driverId)}
+                    className={`font-medium text-sm truncate hover:underline cursor-pointer text-left transition-colors ${dnf ? "line-through decoration-red-500/50" : ""}`}
+                  >
                     {result.Driver.givenName}{" "}
                     <span className="font-bold">{result.Driver.familyName}</span>
-                  </span>
+                  </button>
                   {hasFastestLap && (
                     <span className="inline-block w-4 h-4 rounded-full bg-purple-500/20 text-purple-400 text-[10px] font-bold leading-4 text-center shrink-0 animate-pulse">
                       F
@@ -276,6 +296,11 @@ export default function RaceResults({ results }: RaceResultsProps) {
           );
         })}
       </motion.div>
+
+      <DriverProfileModal
+        driverId={selectedDriver}
+        onClose={() => setSelectedDriver(null)}
+      />
     </div>
   );
 }
