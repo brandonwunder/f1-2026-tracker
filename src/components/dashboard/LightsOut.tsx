@@ -106,18 +106,10 @@ export default function LightsOut({ children }: LightsOutProps) {
 
   const skipSequence = useCallback(() => {
     setPhase('done');
-    try {
-      sessionStorage.setItem('f1-lights-seen', '1');
-    } catch {}
   }, []);
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem('f1-lights-seen') === '1') {
-        setPhase('done');
-        return;
-      }
-    } catch {}
+    // Always play the intro on every page load
 
     // Start the light sequence
     setPhase('sequence');
