@@ -886,28 +886,60 @@ export default function CircuitMap({ circuit }: CircuitMapProps) {
         )}
       </div>
 
-      {/* Legend */}
+      {/* Legend with hover tooltips */}
       <div className="flex flex-wrap gap-4 mt-3 text-xs text-f1-muted">
-        <div className="flex items-center gap-1.5">
-          <span className="w-4 h-0.5 bg-[#8B8B9E] inline-block rounded" />
-          <span>Track</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-4 h-0.5 bg-f1-red inline-block rounded opacity-70" />
-          <span>DRS Zone</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 bg-green-500 inline-block rounded-sm" />
-          <span>Start/Finish</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 bg-yellow-400 inline-block rounded-full" />
-          <span>S2</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 bg-blue-500 inline-block rounded-full" />
-          <span>S3</span>
-        </div>
+        <LegendItem
+          color={<span className="w-4 h-0.5 bg-[#8B8B9E] inline-block rounded" />}
+          label="Track"
+          tooltip="The racing line that all cars follow around the circuit"
+        />
+        <LegendItem
+          color={<span className="w-4 h-0.5 bg-f1-red inline-block rounded opacity-70" />}
+          label="DRS Zone"
+          tooltip="Drag Reduction System — a section where cars can open their rear wing flap to go faster and overtake. Only available when within 1 second of the car ahead."
+        />
+        <LegendItem
+          color={<span className="w-2 h-2 bg-green-500 inline-block rounded-sm" />}
+          label="Start/Finish"
+          tooltip="The start/finish line — where the race begins and where each lap is completed. The checkered flag waves here!"
+        />
+        <LegendItem
+          color={<span className="w-2 h-2 bg-yellow-400 inline-block rounded-full" />}
+          label="S2"
+          tooltip="Sector 2 — the middle section of the track. Each lap is split into 3 sectors to measure performance."
+        />
+        <LegendItem
+          color={<span className="w-2 h-2 bg-blue-500 inline-block rounded-full" />}
+          label="S3"
+          tooltip="Sector 3 — the final section of the track before the start/finish line. Sector 1 starts at the start/finish line."
+        />
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// Legend item with hover tooltip
+// =============================================================================
+
+function LegendItem({
+  color,
+  label,
+  tooltip,
+}: {
+  color: React.ReactNode;
+  label: string;
+  tooltip: string;
+}) {
+  return (
+    <div className="group relative flex items-center gap-1.5 cursor-help">
+      {color}
+      <span className="border-b border-dotted border-f1-muted/40">{label}</span>
+      {/* Tooltip */}
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 px-3 py-2 rounded-lg bg-[#1A1A2E] border border-f1-border text-[11px] text-white/90 leading-relaxed shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+        <div className="font-bold text-f1-red mb-0.5">{label}</div>
+        {tooltip}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1A1A2E] border-r border-b border-f1-border rotate-45 -mt-1" />
       </div>
     </div>
   );

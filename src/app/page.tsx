@@ -3,11 +3,13 @@ import {
   getConstructorStandings,
   getSeasonCalendar,
   getRaceResults,
+  getQualifyingResults,
   CALENDAR_2026,
 } from "@/lib/api";
 import { getNextRace, normalizeRace } from "@/lib/utils/dates";
 import type { RaceWithResults } from "@/lib/api/types";
 import NextRaceWidget from "@/components/dashboard/NextRaceWidget";
+import RaceStatusBanner from "@/components/race/RaceStatusBanner";
 import StandingsPreview from "@/components/dashboard/StandingsPreview";
 import RecentResult from "@/components/dashboard/RecentResult";
 import PredictionScoreWidget from "@/components/dashboard/PredictionScoreWidget";
@@ -31,12 +33,18 @@ export default async function DashboardPage() {
 
   const nextRace = getNextRace(rawCalendar);
 
-  // Check if the next race actually has results already
-  let nextRaceResults: RaceWithResults | null = null;
+  // Check if the next race has qualifying/race results
+  let nextRaceHasResults = false;
+  let nextRaceHasQualifying = false;
   if (nextRace) {
-    nextRaceResults = await getRaceResults(parseInt(nextRace.round, 10));
+    const roundNum = parseInt(nextRace.round, 10);
+    const [raceRes, qualRes] = await Promise.all([
+      getRaceResults(roundNum),
+      getQualifyingResults(roundNum),
+    ]);
+    nextRaceHasResults = (raceRes?.Results?.length ?? 0) > 0;
+    nextRaceHasQualifying = (qualRes?.QualifyingResults?.length ?? 0) > 0;
   }
-  const nextRaceHasResults = (nextRaceResults?.Results?.length ?? 0) > 0;
 
   // Find the most recent completed race and fetch its results
   let recentResult: RaceWithResults | null = null;
@@ -69,18 +77,27 @@ export default async function DashboardPage() {
           </div>
           <div className="broadcast-divider" />
 
-          {/* Next race countdown - full width, prominent */}
+          {/* Next race countdown + status */}
           {nextRace ? (
-            <NextRaceWidget
-              round={nextRace.round}
-              raceName={nextRace.raceName}
-              circuitName={nextRace.circuitName}
-              country={nextRace.country}
-              locality={nextRace.locality}
-              date={nextRace.date}
-              time={nextRace.time}
-              hasRaceResults={nextRaceHasResults}
-            />
+            <div className="space-y-4">
+              <NextRaceWidget
+                round={nextRace.round}
+                raceName={nextRace.raceName}
+                circuitName={nextRace.circuitName}
+                country={nextRace.country}
+                locality={nextRace.locality}
+                date={nextRace.date}
+                time={nextRace.time}
+                hasRaceResults={nextRaceHasResults}
+              />
+              {/* Race weekend status — shows qualifying/race progress */}
+              <RaceStatusBanner
+                raceDate={nextRace.date}
+                raceTime={nextRace.time ?? "14:00:00Z"}
+                hasQualifying={nextRaceHasQualifying}
+                hasRaceResults={nextRaceHasResults}
+              />
+            </div>
           ) : (
             <div className="relative rounded-2xl bg-[#0D0D16] border border-f1-border overflow-hidden p-8 text-center">
               <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />

@@ -1,5 +1,7 @@
 import { getSeasonCalendar, CALENDAR_2026 } from "@/lib/api";
+import { getRaceResults, getQualifyingResults } from "@/lib/api/jolpica";
 import RaceCard from "@/components/race/RaceCard";
+import RaceStatusBanner from "@/components/race/RaceStatusBanner";
 import CountdownTimer from "@/components/race/CountdownTimer";
 import {
   normalizeRace,
@@ -23,6 +25,20 @@ export default async function CalendarPage() {
 
   const nextRace = getNextRace(races);
   const nextRound = nextRace?.round ?? null;
+  const nextRoundNum = nextRound ? parseInt(nextRound, 10) : null;
+
+  // Fetch actual qualifying and race results for the next race
+  // so we can show accurate status (qualifying done vs race done)
+  let hasQualifying = false;
+  let hasRaceResults = false;
+  if (nextRoundNum) {
+    const [raceData, qualData] = await Promise.all([
+      getRaceResults(nextRoundNum),
+      getQualifyingResults(nextRoundNum),
+    ]);
+    hasQualifying = (qualData?.QualifyingResults?.length ?? 0) > 0;
+    hasRaceResults = (raceData?.Results?.length ?? 0) > 0;
+  }
 
   const countdownTarget =
     nextRace && nextRace.time
@@ -31,7 +47,10 @@ export default async function CalendarPage() {
         ? `${nextRace.date}T14:00:00Z`
         : null;
 
+  // Only count races as completed if they have actual results OR
+  // their date is before the next race's date
   const completedRaces = races.filter((race) => {
+    if (race.round === nextRound) return false; // next race is never complete
     const isNext = race.round === nextRound;
     return getRaceStatus(race.date, isNext) === "past";
   }).length;
@@ -77,12 +96,26 @@ export default async function CalendarPage() {
           </div>
         </div>
 
-        {/* Countdown timer */}
+        {/* Race weekend status + countdown */}
         {nextRace && countdownTarget && (
-          <CountdownTimer
-            targetDate={countdownTarget}
-            raceName={nextRace.raceName}
-          />
+          <div className="space-y-4">
+            {/* Status banner — shows qualifying/race progress accurately */}
+            <RaceStatusBanner
+              raceDate={nextRace.date}
+              raceTime={nextRace.time ?? "14:00:00Z"}
+              hasQualifying={hasQualifying}
+              hasRaceResults={hasRaceResults}
+            />
+
+            {/* Countdown timer — only show if race hasn't happened yet */}
+            {!hasRaceResults && (
+              <CountdownTimer
+                targetDate={countdownTarget}
+                raceName={nextRace.raceName}
+                raceResultsPending={!hasRaceResults}
+              />
+            )}
+          </div>
         )}
 
         {/* Race grid */}
