@@ -7,7 +7,6 @@ import {
   getCurrentPlayer,
   setCurrentPlayer,
   addPlayer,
-  removePlayer,
   type Player,
 } from "@/lib/predictions/store";
 
@@ -32,7 +31,6 @@ export default function PlayerSwitcher({
   const [current, setCurrent] = useState<Player | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
   const [newEmoji, setNewEmoji] = useState(EMOJI_OPTIONS[5]);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -52,7 +50,6 @@ export default function PlayerSwitcher({
       ) {
         setIsOpen(false);
         setShowAddForm(false);
-        setConfirmRemoveId(null);
       }
     }
     document.addEventListener("mousedown", handleClick);
@@ -63,7 +60,6 @@ export default function PlayerSwitcher({
     setCurrentPlayer(player.id);
     setCurrent(player);
     setIsOpen(false);
-    setConfirmRemoveId(null);
     onPlayerChange?.(player);
   };
 
@@ -77,19 +73,6 @@ export default function PlayerSwitcher({
     handleSwitch(player);
   };
 
-  const handleRemove = (id: string) => {
-    removePlayer(id);
-    const updated = getPlayers();
-    setPlayers(updated);
-    setConfirmRemoveId(null);
-    // If we removed the current player, update
-    const newCurrent = getCurrentPlayer();
-    if (newCurrent) {
-      setCurrent(newCurrent);
-      onPlayerChange?.(newCurrent);
-    }
-  };
-
   if (!current) return null;
 
   return (
@@ -101,7 +84,6 @@ export default function PlayerSwitcher({
         onClick={() => {
           setIsOpen(!isOpen);
           setShowAddForm(false);
-          setConfirmRemoveId(null);
         }}
         className={`flex items-center gap-2 rounded-lg border border-f1-border bg-f1-surface/80 backdrop-blur-sm
           hover:border-f1-red/40 transition-all ${compact ? "px-3 py-1.5" : "px-4 py-2"}`}
@@ -145,58 +127,24 @@ export default function PlayerSwitcher({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.03 }}
                 >
-                  {confirmRemoveId === player.id ? (
-                    // Confirm remove UI
-                    <div className="flex items-center gap-2 px-2 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                      <span className="text-xs text-red-400 flex-1">
-                        Remove {player.name}?
-                      </span>
-                      <button
-                        onClick={() => handleRemove(player.id)}
-                        className="text-xs font-bold text-red-400 hover:text-red-300 px-2 py-1 rounded bg-red-500/20"
-                      >
-                        Yes
-                      </button>
-                      <button
-                        onClick={() => setConfirmRemoveId(null)}
-                        className="text-xs text-f1-muted hover:text-white px-2 py-1"
-                      >
-                        No
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center group">
-                      <button
-                        onClick={() => handleSwitch(player)}
-                        className={`flex-1 flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors
-                          ${
-                            player.id === current.id
-                              ? "bg-f1-red/10 border border-f1-red/20"
-                              : "hover:bg-f1-surface-hover"
-                          }`}
-                      >
-                        <span className="text-xl">{player.emoji}</span>
-                        <span className="text-sm font-medium">{player.name}</span>
-                        {player.id === current.id && (
-                          <motion.div
-                            layoutId="player-active"
-                            className="ml-auto w-1.5 h-1.5 rounded-full bg-f1-red"
-                          />
-                        )}
-                      </button>
-                      {players.length > 1 && (
-                        <button
-                          onClick={() => setConfirmRemoveId(player.id)}
-                          className="opacity-0 group-hover:opacity-100 p-1.5 text-f1-muted hover:text-red-400 transition-all"
-                          title={`Remove ${player.name}`}
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  )}
+                  <button
+                    onClick={() => handleSwitch(player)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors
+                      ${
+                        player.id === current.id
+                          ? "bg-f1-red/10 border border-f1-red/20"
+                          : "hover:bg-f1-surface-hover"
+                      }`}
+                  >
+                    <span className="text-xl">{player.emoji}</span>
+                    <span className="text-sm font-medium">{player.name}</span>
+                    {player.id === current.id && (
+                      <motion.div
+                        layoutId="player-active"
+                        className="ml-auto w-1.5 h-1.5 rounded-full bg-f1-red"
+                      />
+                    )}
+                  </button>
                 </motion.div>
               ))}
             </div>

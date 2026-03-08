@@ -198,6 +198,9 @@ export default function PredictionsPage() {
           </div>
           <div className="broadcast-divider" />
 
+          {/* How it works — top of page so everyone understands */}
+          <HowItWorks />
+
           {/* Quick actions — upcoming races to predict */}
           <section>
             <h2 className="text-xs uppercase tracking-widest text-f1-muted font-bold mb-3">
@@ -331,8 +334,6 @@ export default function PredictionsPage() {
             </motion.div>
           )}
 
-          {/* How it works section */}
-          <HowItWorks />
         </div>
       </PageTransition>
     </>
