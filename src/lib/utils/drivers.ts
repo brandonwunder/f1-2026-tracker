@@ -21,15 +21,17 @@ const DRIVER_IMAGE_CODES: Record<string, string> = {
   alonso: 'feralo01',
   stroll: 'lanstr01',
   gasly: 'piegas01',
-  doohan: 'jacdoo01',
+  colapinto: 'fracol01',
   albon: 'alealb01',
   sainz: 'carsai01',
   lawson: 'lialaw01',
-  tsunoda: 'yuktsu01',
+  arvid_lindblad: 'arvlin01',
   ocon: 'estoco01',
   bearman: 'olibea01',
   hulkenberg: 'nichul01',
   bortoleto: 'gabbor01',
+  perez: 'serper01',
+  bottas: 'valbot01',
 };
 
 /**

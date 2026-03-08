@@ -6,6 +6,7 @@ import CircuitInfo from "@/components/race/CircuitInfo";
 import CircuitMap from "@/components/race/CircuitMap";
 import QualifyingResults from "@/components/race/QualifyingResults";
 import RaceResults from "@/components/race/RaceResults";
+import RaceStatusBanner from "@/components/race/RaceStatusBanner";
 import PredictionPanel from "@/components/predictions/PredictionPanel";
 import Link from "next/link";
 import { PageTransition } from "@/components/ui/MotionWrappers";
@@ -95,6 +96,14 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
             </div>
           </div>
         </div>
+
+        {/* Race weekend status banner */}
+        <RaceStatusBanner
+          raceDate={raceInfo.date}
+          raceTime={raceInfo.time ?? "14:00:00Z"}
+          hasQualifying={(qualifyingData?.QualifyingResults?.length ?? 0) > 0}
+          hasRaceResults={(raceData?.Results?.length ?? 0) > 0}
+        />
 
         {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
