@@ -44,7 +44,7 @@ export default function DriverCard({ standing }: DriverCardProps) {
   const teamName = constructor?.name ?? 'Unknown Team';
 
   const flag = getDriverCountryFlag(driver.nationality);
-  const imageUrl = getDriverImageUrl(driver);
+  const imageUrl = getDriverImageUrl(driver, teamId);
   const initials = getDriverInitials(driver);
   const driverNumber = driver.permanentNumber ?? driver.code ?? '--';
   const position = parseInt(standing.position);

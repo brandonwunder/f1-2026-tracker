@@ -73,10 +73,13 @@ export function getRaceStatus(
   isNextRace: boolean
 ): RaceStatus {
   if (isNextRace) return "next";
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const race = new Date(raceDate + "T00:00:00");
-  return race < today ? "past" : "future";
+  // Compare in UTC to avoid server/client timezone discrepancies.
+  // A race is only "past" if its date is strictly before today (UTC).
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const [y, m, d] = raceDate.split("-").map(Number);
+  const raceUTC = Date.UTC(y, m - 1, d);
+  return raceUTC < todayUTC ? "past" : "future";
 }
 
 /**
@@ -86,12 +89,13 @@ export function getRaceStatus(
 export function getNextRace<T extends { date: string }>(
   races: T[]
 ): T | null {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 
   for (const race of races) {
-    const raceDate = new Date(race.date + "T00:00:00");
-    if (raceDate >= today) {
+    const [y, m, d] = race.date.split("-").map(Number);
+    const raceUTC = Date.UTC(y, m - 1, d);
+    if (raceUTC >= todayUTC) {
       return race;
     }
   }

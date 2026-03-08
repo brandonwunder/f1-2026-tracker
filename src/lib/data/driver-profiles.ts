@@ -80,7 +80,7 @@ export const DRIVER_PROFILES: Record<string, DriverProfile> = {
     number: 30,
     nationality: 'New Zealander',
     dateOfBirth: '2002-02-11',
-    teamId: 'red_bull',
+    teamId: 'racing_bulls',
     careerStats: {
       championships: 0,
       wins: 0,
@@ -619,7 +619,7 @@ export const DRIVER_PROFILES: Record<string, DriverProfile> = {
     number: 6,
     nationality: 'French',
     dateOfBirth: '2004-09-28',
-    teamId: 'racing_bulls',
+    teamId: 'red_bull',
     careerStats: {
       championships: 0,
       wins: 0,

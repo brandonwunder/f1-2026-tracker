@@ -27,29 +27,21 @@ const CONSTRUCTOR_ID_MAP: Record<string, string> = {
 };
 
 /**
- * Real F1 team logos hosted on Wikimedia Commons (SVG).
+ * Local team logo files in /public/logos/.
+ * These are the user's own logo files, copied to public for static serving.
  */
 const TEAM_LOGOS: Record<string, string> = {
-  red_bull:
-    'https://upload.wikimedia.org/wikipedia/en/7/7a/Oracle_Red_Bull_Racing_logo.svg',
-  ferrari:
-    'https://upload.wikimedia.org/wikipedia/en/a/a2/Scuderia_Ferrari_Logo.svg',
-  mercedes:
-    'https://upload.wikimedia.org/wikipedia/commons/f/fb/Mercedes_AMG_Petronas_F1_Logo.svg',
-  mclaren:
-    'https://upload.wikimedia.org/wikipedia/en/6/66/McLaren_Racing_logo.svg',
-  aston_martin:
-    'https://upload.wikimedia.org/wikipedia/en/1/1e/Aston_Martin_Aramco_F1_Team_logo.svg',
-  alpine:
-    'https://upload.wikimedia.org/wikipedia/fr/b/b7/Alpine_F1_Team_2021_Logo.svg',
-  williams:
-    'https://upload.wikimedia.org/wikipedia/en/f/f9/Williams_Racing_2020_logo.svg',
-  racing_bulls:
-    'https://upload.wikimedia.org/wikipedia/en/6/6e/Visa_Cash_App_Racing_Bulls_logo.svg',
-  haas: 'https://upload.wikimedia.org/wikipedia/en/4/45/Haas_F1_Team_logo.svg',
-  audi: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
-  cadillac:
-    'https://upload.wikimedia.org/wikipedia/commons/2/22/Cadillac_logo.svg',
+  red_bull: '/logos/red_bull.png',
+  ferrari: '/logos/ferrari.jpg',
+  mercedes: '/logos/mercedes.png',
+  mclaren: '/logos/mclaren.png',
+  aston_martin: '/logos/aston_martin.jpg',
+  alpine: '/logos/alpine.avif',
+  williams: '/logos/williams.webp',
+  racing_bulls: '/logos/racing_bulls.png',
+  haas: '/logos/haas.jpg',
+  audi: '/logos/audi.png',
+  cadillac: '/logos/cadillac.webp',
 };
 
 export function resolveTeamId(constructorId: string): string {

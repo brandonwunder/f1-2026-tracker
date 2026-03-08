@@ -5,13 +5,106 @@ import type { Driver, DriverStanding } from '@/lib/api/types';
 // =============================================================================
 
 /**
- * Construct F1 media CDN headshot URL for a driver.
- * Pattern: https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/{firstName}{lastName}.jpg
+ * F1 media driver codes used in the official CDN URL.
+ * Format: first 3 chars of given name + first 3 chars of family name + "01"
+ * (lowercased). Some drivers have non-standard codes noted below.
  */
-export function getDriverImageUrl(driver: Driver): string {
-  const first = driver.givenName.replace(/\s+/g, '');
-  const last = driver.familyName.replace(/\s+/g, '');
-  return `https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/${first}${last}.jpg`;
+const DRIVER_IMAGE_CODES: Record<string, string> = {
+  max_verstappen: 'maxver01',
+  hadjar: 'isahad01',
+  leclerc: 'chalec01',
+  hamilton: 'lewham01',
+  russell: 'georus01',
+  antonelli: 'andant01',
+  norris: 'lannor01',
+  piastri: 'oscpia01',
+  alonso: 'feralo01',
+  stroll: 'lanstr01',
+  gasly: 'piegas01',
+  doohan: 'jacdoo01',
+  albon: 'alealb01',
+  sainz: 'carsai01',
+  lawson: 'lialaw01',
+  tsunoda: 'yuktsu01',
+  ocon: 'estoco01',
+  bearman: 'olibea01',
+  hulkenberg: 'nichul01',
+  bortoleto: 'gabbor01',
+};
+
+/**
+ * Map our internal team IDs to the team slug used in the F1 media CDN path.
+ */
+const TEAM_IMAGE_SLUGS: Record<string, string> = {
+  red_bull: 'redbullracing',
+  ferrari: 'ferrari',
+  mercedes: 'mercedes',
+  mclaren: 'mclaren',
+  aston_martin: 'astonmartin',
+  alpine: 'alpine',
+  williams: 'williams',
+  racing_bulls: 'racingbulls',
+  haas: 'haasf1team',
+  audi: 'audi',
+  cadillac: 'cadillac',
+};
+
+/**
+ * Construct F1 media CDN headshot URL for a driver.
+ *
+ * Primary: 2026 official Cloudinary-based URL (720px WebP).
+ *   https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2026/{team}/{code}/2026{team}{code}right.webp
+ *
+ * Fallback pattern (OpenF1-style PNG, no team needed):
+ *   https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/{LETTER}/{CODE}_{Given}_{Family}/{code}.png.transform/1col/image.png
+ */
+export function getDriverImageUrl(driver: Driver, teamId?: string): string {
+  const driverCode = DRIVER_IMAGE_CODES[driver.driverId];
+  const teamSlug = teamId ? TEAM_IMAGE_SLUGS[teamId] : undefined;
+
+  // If we have both the driver code and team, use the primary 2026 CDN URL
+  if (driverCode && teamSlug) {
+    return `https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2026/${teamSlug}/${driverCode}/2026${teamSlug}${driverCode}right.webp`;
+  }
+
+  // Fallback: OpenF1-style headshot URL (works without team context)
+  if (driverCode) {
+    const upper = driverCode.toUpperCase().replace(/\d+$/, '01');
+    const letter = driver.givenName.charAt(0).toUpperCase();
+    return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/${letter}/${upper}_${driver.givenName}_${driver.familyName}/${driverCode}.png.transform/1col/image.png`;
+  }
+
+  // Last resort: generate the code from name (first3 + last3 + 01)
+  const first3 = driver.givenName.replace(/\s+/g, '').substring(0, 3).toLowerCase();
+  const last3 = driver.familyName.replace(/\s+/g, '').substring(0, 3).toLowerCase();
+  const generatedCode = `${first3}${last3}01`;
+  const letter = driver.givenName.charAt(0).toUpperCase();
+  const upper = generatedCode.toUpperCase().replace(/\d+$/, '01');
+  return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/${letter}/${upper}_${driver.givenName}_${driver.familyName}/${generatedCode}.png.transform/1col/image.png`;
+}
+
+/**
+ * Build the 2026 CDN headshot URL from a driver profile's driverId and teamId.
+ * Useful in server components that have profile data but not a full Driver object.
+ */
+export function getDriverProfileImageUrl(
+  driverId: string,
+  teamId: string,
+  firstName: string,
+  lastName: string,
+): string {
+  const driverCode = DRIVER_IMAGE_CODES[driverId];
+  const teamSlug = TEAM_IMAGE_SLUGS[teamId];
+
+  if (driverCode && teamSlug) {
+    return `https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2026/${teamSlug}/${driverCode}/2026${teamSlug}${driverCode}right.webp`;
+  }
+
+  // Fallback
+  const code = driverCode ?? `${firstName.substring(0, 3).toLowerCase()}${lastName.substring(0, 3).toLowerCase()}01`;
+  const letter = firstName.charAt(0).toUpperCase();
+  const upper = code.toUpperCase().replace(/\d+$/, '01');
+  return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/${letter}/${upper}_${firstName}_${lastName}/${code}.png.transform/1col/image.png`;
 }
 
 /**

@@ -793,6 +793,40 @@ function getCircuitSVG(circuitId: string): JSX.Element | null {
         </g>
       );
 
+    /* ------------------------------------------------------------------ */
+    /*  25. MADRID - Circuito de Madrid - new semi-permanent 2026 venue    */
+    /* ------------------------------------------------------------------ */
+    case "madrid":
+      return (
+        <g>
+          <path
+            d="M 100,180 L 100,100 Q 100,72 125,60 L 195,35 Q 220,28 240,42
+               L 275,72 Q 295,88 310,78 L 340,62 Q 358,52 365,72
+               L 370,120 Q 372,145 355,158 L 320,180 Q 300,195 295,220
+               L 290,248 Q 285,268 262,275 L 195,288 Q 168,292 152,278
+               L 128,248 Q 112,232 108,210 L 100,180 Z"
+            fill="none"
+            stroke="#8B8B9E"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <line x1="95" y1="180" x2="105" y2="180" stroke="#22C55E" strokeWidth="3" />
+          {/* DRS - main straight */}
+          <path d="M 100,145 L 100,100 Q 100,72 125,60" fill="none" stroke="#E10600" strokeWidth="4" strokeLinecap="round" opacity="0.7" />
+          <text x="68" y="110" fill="#E10600" fontSize="10" fontWeight="bold">DRS</text>
+          {/* DRS - back straight */}
+          <path d="M 355,158 L 320,180 Q 300,195 295,220" fill="none" stroke="#E10600" strokeWidth="4" strokeLinecap="round" opacity="0.7" />
+          <text x="330" y="200" fill="#E10600" fontSize="10" fontWeight="bold">DRS</text>
+          <circle cx="365" cy="72" r="3" fill="#FBBF24" />
+          <text x="370" y="67" fill="#FBBF24" fontSize="9">S2</text>
+          <circle cx="262" cy="275" r="3" fill="#3B82F6" />
+          <text x="267" y="270" fill="#3B82F6" fontSize="9">S3</text>
+          {/* New venue label */}
+          <text x="200" y="165" fill="#8B8B9E" fontSize="9" textAnchor="middle" opacity="0.5">NEW 2026</text>
+        </g>
+      );
+
     default:
       return null;
   }

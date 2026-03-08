@@ -9,8 +9,11 @@ import {
   savePrediction,
   getPrediction,
   lockPrediction,
+  getCurrentPlayer,
   type Prediction,
+  type Player,
 } from "@/lib/predictions/store";
+import PlayerSwitcher from "@/components/predictions/PlayerSwitcher";
 import {
   scorePrediction,
   hasRaceResults,
@@ -71,10 +74,40 @@ export default function PredictionPanel({
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [score, setScore] = useState<PredictionScore | null>(null);
   const [accumulatedPoints, setAccumulatedPoints] = useState(0);
+  const [currentPlayerName, setCurrentPlayerName] = useState("Your");
   const saveButtonRef = useRef<HTMLButtonElement>(null);
   const { toast, showToast, hideToast } = useToast();
 
   const resultsAvailable = hasRaceResults(raceResults);
+
+  // Load current player name
+  useEffect(() => {
+    const player = getCurrentPlayer();
+    if (player) setCurrentPlayerName(player.name + "'s");
+  }, []);
+
+  // Handle player switch — reload predictions for the new player
+  const handlePlayerChange = (player: Player) => {
+    setCurrentPlayerName(player.name + "'s");
+    // Reload prediction for this round with new player
+    const existing = getPrediction(round);
+    if (existing) {
+      setPrediction(existing);
+      setP1(existing.p1);
+      setP2(existing.p2);
+      setP3(existing.p3);
+      setLocked(existing.locked);
+    } else {
+      setPrediction(null);
+      setP1("");
+      setP2("");
+      setP3("");
+      setLocked(false);
+    }
+    setScore(null);
+    setSaved(false);
+    setAccumulatedPoints(getAccumulatedPoints());
+  };
 
   // -------------------------------------------------------------------------
   // Load existing prediction from localStorage
@@ -244,8 +277,11 @@ export default function PredictionPanel({
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="glass-card rounded-xl p-5"
       >
+        <div className="mb-3">
+          <PlayerSwitcher onPlayerChange={handlePlayerChange} compact />
+        </div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold">Your Predictions</h3>
+          <h3 className="text-lg font-bold">{currentPlayerName} Predictions</h3>
           <div className="flex items-center gap-2">
             <span className="text-xs text-f1-muted uppercase tracking-wider">
               Total
@@ -354,8 +390,11 @@ export default function PredictionPanel({
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="glass-card rounded-xl p-5"
       >
+        <div className="mb-3">
+          <PlayerSwitcher onPlayerChange={handlePlayerChange} compact />
+        </div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold">Your Predictions</h3>
+          <h3 className="text-lg font-bold">{currentPlayerName} Predictions</h3>
           <span className="text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
             Locked
           </span>
@@ -407,9 +446,12 @@ export default function PredictionPanel({
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="glass-card rounded-xl p-5"
       >
-        <h3 className="text-lg font-bold mb-2">Your Predictions</h3>
+        <div className="mb-3">
+          <PlayerSwitcher onPlayerChange={handlePlayerChange} compact />
+        </div>
+        <h3 className="text-lg font-bold mb-2">{currentPlayerName} Predictions</h3>
         <p className="text-f1-muted text-sm">
-          Predictions are locked. You did not submit a prediction for this race.
+          Predictions are locked. No prediction was submitted for this race.
         </p>
 
         <Toast message={toast.message} show={toast.show} onClose={hideToast} />
@@ -430,8 +472,11 @@ export default function PredictionPanel({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="glass-card rounded-xl p-5"
     >
+      <div className="mb-3">
+        <PlayerSwitcher onPlayerChange={handlePlayerChange} compact />
+      </div>
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-lg font-bold">Your Predictions</h3>
+        <h3 className="text-lg font-bold">{currentPlayerName} Predictions</h3>
         <span className={`text-xs font-bold font-orbitron ${rank.color}`}>
           {rank.title}
         </span>

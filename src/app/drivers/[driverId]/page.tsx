@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getDriverProfile, getAllDriverProfiles } from '@/lib/data/driver-profiles';
 import { TEAMS } from '@/lib/constants/teams';
-import { getDriverCountryFlag } from '@/lib/utils/drivers';
+import { getDriverCountryFlag, getDriverProfileImageUrl } from '@/lib/utils/drivers';
 import DriverProfileClient from './DriverProfileClient';
 
 // Generate static params for all drivers
@@ -37,9 +37,12 @@ export default function DriverProfilePage({
   const teamName = team?.name ?? 'Unknown Team';
   const flag = getDriverCountryFlag(profile.nationality);
 
-  const firstName = profile.firstName.replace(/\s+/g, '');
-  const lastName = profile.lastName.replace(/\s+/g, '');
-  const imageUrl = `https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/${firstName}${lastName}.jpg`;
+  const imageUrl = getDriverProfileImageUrl(
+    profile.driverId,
+    profile.teamId,
+    profile.firstName,
+    profile.lastName,
+  );
 
   const stats = profile.careerStats;
 

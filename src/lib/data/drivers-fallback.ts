@@ -12,7 +12,7 @@ export interface PredictionDriver {
 
 export const DRIVERS_2026: PredictionDriver[] = [
   { driverId: "max_verstappen", name: "Max Verstappen", code: "VER", teamId: "red_bull" },
-  { driverId: "lawson", name: "Liam Lawson", code: "LAW", teamId: "red_bull" },
+  { driverId: "hadjar", name: "Isack Hadjar", code: "HAD", teamId: "red_bull" },
   { driverId: "leclerc", name: "Charles Leclerc", code: "LEC", teamId: "ferrari" },
   { driverId: "hamilton", name: "Lewis Hamilton", code: "HAM", teamId: "ferrari" },
   { driverId: "russell", name: "George Russell", code: "RUS", teamId: "mercedes" },
@@ -25,8 +25,8 @@ export const DRIVERS_2026: PredictionDriver[] = [
   { driverId: "doohan", name: "Jack Doohan", code: "DOO", teamId: "alpine" },
   { driverId: "albon", name: "Alexander Albon", code: "ALB", teamId: "williams" },
   { driverId: "sainz", name: "Carlos Sainz", code: "SAI", teamId: "williams" },
+  { driverId: "lawson", name: "Liam Lawson", code: "LAW", teamId: "racing_bulls" },
   { driverId: "tsunoda", name: "Yuki Tsunoda", code: "TSU", teamId: "racing_bulls" },
-  { driverId: "hadjar", name: "Isack Hadjar", code: "HAD", teamId: "racing_bulls" },
   { driverId: "ocon", name: "Esteban Ocon", code: "OCO", teamId: "haas" },
   { driverId: "bearman", name: "Oliver Bearman", code: "BEA", teamId: "haas" },
   { driverId: "hulkenberg", name: "Nico Hulkenberg", code: "HUL", teamId: "audi" },

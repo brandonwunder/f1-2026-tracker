@@ -308,6 +308,18 @@ export const CIRCUITS: Record<string, CircuitData> = {
     firstGP: 2009,
     overtakingSpots: ["Turn 1 braking zone", "Turn 6 chicane", "Turn 9 long back straight"],
   },
+  "Circuito de Madrid": {
+    id: "madrid",
+    name: "Circuito de Madrid",
+    location: "Madrid, Spain",
+    country: "Spain",
+    lengthKm: 5.474,
+    turns: 20,
+    lapRecord: { driver: "N/A", time: "N/A", year: 2026 },
+    type: "semi-permanent",
+    firstGP: 2026,
+    overtakingSpots: ["Turn 1 braking zone", "Long back straight", "Turn 14 hairpin"],
+  },
 };
 
 /**
