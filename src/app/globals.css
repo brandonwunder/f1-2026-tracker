@@ -3,16 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --f1-dark: #15151E;
-  --f1-surface: #1F1F2B;
-  --f1-surface-hover: #2A2A3A;
+  --f1-dark: #0A0A12;
+  --f1-surface: #12121C;
+  --f1-surface-hover: #1A1A28;
   --f1-red: #E10600;
-  --f1-border: #2E2E3E;
-  --f1-muted: #8B8B9E;
+  --f1-border: #1E1E2E;
+  --f1-muted: #6B6B82;
+  --f1-accent: #FF1E00;
 }
 
 body {
   @apply bg-f1-dark text-white antialiased;
+  background-image:
+    /* Carbon fiber micro-texture */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.008) 2px,
+      rgba(255,255,255,0.008) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.008) 2px,
+      rgba(255,255,255,0.008) 4px
+    );
+  background-attachment: fixed;
 }
 
 html {
@@ -20,46 +38,61 @@ html {
 }
 
 /* =========================================================================
-   Scrollbar
+   Scrollbar — sleek dark
    ========================================================================= */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #15151E;
+  background: #0A0A12;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2E2E3E;
-  border-radius: 4px;
+  background: #1E1E2E;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3E3E4E;
+  background: #E10600;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2E2E3E #15151E;
+  scrollbar-color: #1E1E2E #0A0A12;
 }
 
 /* =========================================================================
-   Glass card effect
+   Glass card — deeper, richer
    ========================================================================= */
 
 .glass-card {
-  background: rgba(31, 31, 43, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(46, 46, 62, 0.6);
+  background: linear-gradient(
+    135deg,
+    rgba(18, 18, 28, 0.9) 0%,
+    rgba(14, 14, 22, 0.95) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(30, 30, 46, 0.8);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .glass-card:hover {
-  background: rgba(42, 42, 58, 0.7);
-  border-color: rgba(225, 6, 0, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 40, 0.95) 0%,
+    rgba(18, 18, 28, 0.95) 100%
+  );
+  border-color: rgba(225, 6, 0, 0.25);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(225, 6, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* =========================================================================
@@ -100,11 +133,11 @@ html {
   inset: 0;
   background: linear-gradient(
     105deg,
-    transparent 40%,
-    rgba(255, 215, 0, 0.08) 45%,
-    rgba(255, 255, 255, 0.13) 50%,
-    rgba(255, 215, 0, 0.08) 55%,
-    transparent 60%
+    transparent 35%,
+    rgba(255, 215, 0, 0.06) 42%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 215, 0, 0.06) 58%,
+    transparent 65%
   );
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
@@ -113,15 +146,15 @@ html {
 }
 
 /* =========================================================================
-   Shimmer skeleton loader
+   Skeleton loader
    ========================================================================= */
 
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    rgba(31, 31, 43, 1) 25%,
-    rgba(42, 42, 58, 1) 50%,
-    rgba(31, 31, 43, 1) 75%
+    rgba(18, 18, 28, 1) 25%,
+    rgba(30, 30, 46, 1) 50%,
+    rgba(18, 18, 28, 1) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
@@ -133,32 +166,78 @@ html {
 
 .checkered-pattern {
   background-image:
-    linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.03) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.03) 75%);
+    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255,255,255,0.04) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.04) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.04) 75%);
   background-size: 20px 20px;
   background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
 
 /* =========================================================================
-   Glow effects
+   Carbon fiber texture overlay
+   ========================================================================= */
+
+.carbon-fiber {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(255,255,255,0.015) 1px,
+      rgba(255,255,255,0.015) 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(255,255,255,0.015) 1px,
+      rgba(255,255,255,0.015) 2px
+    );
+}
+
+/* =========================================================================
+   Racing stripe accent
+   ========================================================================= */
+
+.racing-stripe {
+  position: relative;
+  overflow: hidden;
+}
+
+.racing-stripe::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #E10600, #FF6B35, #E10600, transparent);
+}
+
+/* =========================================================================
+   Glow effects — intensified
    ========================================================================= */
 
 .glow-red {
-  box-shadow: 0 0 20px 2px rgba(225, 6, 0, 0.3);
+  box-shadow: 0 0 25px 4px rgba(225, 6, 0, 0.35), 0 0 60px 8px rgba(225, 6, 0, 0.1);
 }
 
 .glow-gold {
-  box-shadow: 0 0 15px 2px rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 20px 4px rgba(255, 215, 0, 0.3), 0 0 50px 8px rgba(255, 215, 0, 0.1);
 }
 
 .glow-silver {
-  box-shadow: 0 0 15px 2px rgba(192, 192, 192, 0.2);
+  box-shadow: 0 0 20px 4px rgba(192, 192, 192, 0.25), 0 0 50px 8px rgba(192, 192, 192, 0.08);
 }
 
 .glow-bronze {
-  box-shadow: 0 0 15px 2px rgba(205, 127, 50, 0.2);
+  box-shadow: 0 0 20px 4px rgba(205, 127, 50, 0.25), 0 0 50px 8px rgba(205, 127, 50, 0.08);
+}
+
+/* Team color glow — set via inline --team-color */
+.glow-team {
+  box-shadow: 0 0 20px 3px var(--team-color, rgba(225, 6, 0, 0.2));
 }
 
 /* =========================================================================
@@ -177,6 +256,10 @@ html {
 .toast-enter {
   animation: slide-up 0.3s ease-out, fade-in 0.3s ease-out;
 }
+
+/* =========================================================================
+   Keyframes
+   ========================================================================= */
 
 @keyframes slide-up {
   0% { opacity: 0; transform: translateY(20px); }
@@ -198,10 +281,6 @@ html {
   100% { background-position: 200% 0; }
 }
 
-/* =========================================================================
-   Bar grow animation for standings points bars
-   ========================================================================= */
-
 @keyframes bar-grow-anim {
   0% { width: 0%; }
   100% { width: var(--bar-width, 0%); }
@@ -210,4 +289,20 @@ html {
 .bar-grow {
   width: var(--bar-width, 0%);
   animation: bar-grow-anim 0.8s ease-out forwards;
+}
+
+/* =========================================================================
+   Broadcast-style section divider
+   ========================================================================= */
+
+.broadcast-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(225, 6, 0, 0.4) 20%,
+    rgba(225, 6, 0, 0.6) 50%,
+    rgba(225, 6, 0, 0.4) 80%,
+    transparent
+  );
 }

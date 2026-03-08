@@ -22,10 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${orbitron.variable}`}>
-      <body className={`${inter.className} bg-f1-dark text-white min-h-screen`}>
+      <body className={`${inter.className} bg-f1-dark text-white min-h-screen selection:bg-f1-red/30 selection:text-white`}>
         <Navigation />
         <main className="pt-16 lg:pt-0 lg:ml-64 min-h-screen">
-          <div className="p-4 md:p-6">
+          <div className="p-4 md:p-8 max-w-[1400px] mx-auto">
             {children}
           </div>
         </main>

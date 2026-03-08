@@ -9,12 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'f1-dark': '#15151E',
-        'f1-surface': '#1F1F2B',
-        'f1-surface-hover': '#2A2A3A',
+        'f1-dark': '#0A0A12',
+        'f1-surface': '#12121C',
+        'f1-surface-hover': '#1A1A28',
         'f1-red': '#E10600',
-        'f1-border': '#2E2E3E',
-        'f1-muted': '#8B8B9E',
+        'f1-border': '#1E1E2E',
+        'f1-muted': '#6B6B82',
+        'f1-accent': '#FF1E00',
       },
       fontFamily: {
         orbitron: ['var(--font-orbitron)', 'monospace'],
