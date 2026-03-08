@@ -34,11 +34,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. App renders properly on desktop and is functional on mobile/tablet screens
   4. Pushing code to GitHub main branch triggers automatic deployment to Vercel
   5. Team color constants for all 10 F1 teams are available and render correctly in test components
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md -- Scaffold Next.js 14 with F1 dark theme, team colors, responsive navigation, and placeholder pages
+- [ ] 01-02-PLAN.md -- Push to GitHub and deploy to Vercel with auto-deploy pipeline
 
 ### Phase 2: Data Layer
 **Goal**: The app can fetch, cache, and serve all F1 data from Jolpica and OpenF1 APIs with proper rate limiting and error handling
@@ -169,7 +169,7 @@ Note: Phases 5 and 6 depend only on Phase 2 and can execute in parallel with Pha
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Foundation | 0/? | Not started | - |
+| 1. Project Foundation | 0/2 | Planning complete | - |
 | 2. Data Layer | 0/? | Not started | - |
 | 3. Race Calendar | 0/? | Not started | - |
 | 4. Race Detail and Circuit Maps | 0/? | Not started | - |
