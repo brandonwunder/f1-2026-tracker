@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { DriverStanding } from '@/lib/api/types';
 import { TEAMS } from '@/lib/constants/teams';
@@ -206,10 +207,38 @@ export default function DriverCard({ standing }: DriverCardProps) {
                     <StatItem label="Number" value={`#${driverNumber}`} />
                   </div>
                 </div>
+
+                {/* View Profile Link */}
+                <Link
+                  href={`/drivers/${driver.driverId}`}
+                  className="block w-full text-center py-2.5 rounded-lg text-sm font-medium transition-all hover:brightness-110"
+                  style={{
+                    backgroundColor: `${teamColor}20`,
+                    color: teamColor,
+                    border: `1px solid ${teamColor}40`,
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  View Full Profile &rarr;
+                </Link>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Always-visible View Profile link at bottom */}
+        {!expanded && (
+          <div className="px-4 pb-3">
+            <Link
+              href={`/drivers/${driver.driverId}`}
+              className="block text-center text-xs font-medium transition-colors hover:brightness-125"
+              style={{ color: `${teamColor}AA` }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              View Profile &rarr;
+            </Link>
+          </div>
+        )}
       </motion.div>
     </TiltCard>
   );
