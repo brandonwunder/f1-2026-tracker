@@ -107,68 +107,68 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | — | Pending |
-| DATA-02 | — | Pending |
-| DATA-03 | — | Pending |
-| DATA-04 | — | Pending |
-| DATA-05 | — | Pending |
-| DATA-06 | — | Pending |
-| DATA-07 | — | Pending |
-| CAL-01 | — | Pending |
-| CAL-02 | — | Pending |
-| CAL-03 | — | Pending |
-| CAL-04 | — | Pending |
-| CAL-05 | — | Pending |
-| RACE-01 | — | Pending |
-| RACE-02 | — | Pending |
-| RACE-03 | — | Pending |
-| RACE-04 | — | Pending |
-| RACE-05 | — | Pending |
-| RACE-06 | — | Pending |
-| DRV-01 | — | Pending |
-| DRV-02 | — | Pending |
-| DRV-03 | — | Pending |
-| DRV-04 | — | Pending |
-| DRV-05 | — | Pending |
-| DRV-06 | — | Pending |
-| DRV-07 | — | Pending |
-| STD-01 | — | Pending |
-| STD-02 | — | Pending |
-| STD-03 | — | Pending |
-| STD-04 | — | Pending |
-| PRED-01 | — | Pending |
-| PRED-02 | — | Pending |
-| PRED-03 | — | Pending |
-| PRED-04 | — | Pending |
-| PRED-05 | — | Pending |
-| PRED-06 | — | Pending |
-| PRED-07 | — | Pending |
-| PRED-08 | — | Pending |
-| PRED-09 | — | Pending |
-| CIR-01 | — | Pending |
-| CIR-02 | — | Pending |
-| CIR-03 | — | Pending |
-| CIR-04 | — | Pending |
-| CIR-05 | — | Pending |
-| DASH-01 | — | Pending |
-| DASH-02 | — | Pending |
-| DASH-03 | — | Pending |
-| DASH-04 | — | Pending |
-| DASH-05 | — | Pending |
-| DASH-06 | — | Pending |
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| INFRA-04 | — | Pending |
-| INFRA-05 | — | Pending |
-| INFRA-06 | — | Pending |
-| INFRA-07 | — | Pending |
+| DATA-01 | Phase 2 | Pending |
+| DATA-02 | Phase 2 | Pending |
+| DATA-03 | Phase 2 | Pending |
+| DATA-04 | Phase 2 | Pending |
+| DATA-05 | Phase 2 | Pending |
+| DATA-06 | Phase 2 | Pending |
+| DATA-07 | Phase 2 | Pending |
+| CAL-01 | Phase 3 | Pending |
+| CAL-02 | Phase 3 | Pending |
+| CAL-03 | Phase 3 | Pending |
+| CAL-04 | Phase 3 | Pending |
+| CAL-05 | Phase 3 | Pending |
+| RACE-01 | Phase 4 | Pending |
+| RACE-02 | Phase 4 | Pending |
+| RACE-03 | Phase 4 | Pending |
+| RACE-04 | Phase 4 | Pending |
+| RACE-05 | Phase 4 | Pending |
+| RACE-06 | Phase 7 | Pending |
+| DRV-01 | Phase 5 | Pending |
+| DRV-02 | Phase 5 | Pending |
+| DRV-03 | Phase 5 | Pending |
+| DRV-04 | Phase 5 | Pending |
+| DRV-05 | Phase 5 | Pending |
+| DRV-06 | Phase 5 | Pending |
+| DRV-07 | Phase 5 | Pending |
+| STD-01 | Phase 6 | Pending |
+| STD-02 | Phase 6 | Pending |
+| STD-03 | Phase 6 | Pending |
+| STD-04 | Phase 6 | Pending |
+| PRED-01 | Phase 7 | Pending |
+| PRED-02 | Phase 7 | Pending |
+| PRED-03 | Phase 7 | Pending |
+| PRED-04 | Phase 7 | Pending |
+| PRED-05 | Phase 8 | Pending |
+| PRED-06 | Phase 8 | Pending |
+| PRED-07 | Phase 8 | Pending |
+| PRED-08 | Phase 8 | Pending |
+| PRED-09 | Phase 8 | Pending |
+| CIR-01 | Phase 4 | Pending |
+| CIR-02 | Phase 4 | Pending |
+| CIR-03 | Phase 4 | Pending |
+| CIR-04 | Phase 4 | Pending |
+| CIR-05 | Phase 4 | Pending |
+| DASH-01 | Phase 9 | Pending |
+| DASH-02 | Phase 9 | Pending |
+| DASH-03 | Phase 9 | Pending |
+| DASH-04 | Phase 9 | Pending |
+| DASH-05 | Phase 9 | Pending |
+| DASH-06 | Phase 9 | Pending |
+| INFRA-01 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Pending |
+| INFRA-04 | Phase 1 | Pending |
+| INFRA-05 | Phase 1 | Pending |
+| INFRA-06 | Phase 1 | Pending |
+| INFRA-07 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 51 total
-- Mapped to phases: 0
-- Unmapped: 51 (roadmap pending)
+- Mapped to phases: 51
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-07*
-*Last updated: 2026-03-07 after initial definition*
+*Last updated: 2026-03-07 after roadmap creation*
