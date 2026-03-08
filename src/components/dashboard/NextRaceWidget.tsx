@@ -79,15 +79,17 @@ export default function NextRaceWidget({
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="broadcast-divider mb-5" />
-
-          {/* Countdown */}
-          <CountdownTimer
-            targetDate={targetDate}
-            raceName={raceName}
-            raceResultsPending={!hasRaceResults}
-          />
+          {/* Divider + Countdown — hide when race is already complete */}
+          {!hasRaceResults && (
+            <>
+              <div className="broadcast-divider mb-5" />
+              <CountdownTimer
+                targetDate={targetDate}
+                raceName={raceName}
+                raceResultsPending
+              />
+            </>
+          )}
         </div>
       </Link>
     </motion.div>
