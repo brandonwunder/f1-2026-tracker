@@ -8,6 +8,7 @@ import QualifyingResults from "@/components/race/QualifyingResults";
 import RaceResults from "@/components/race/RaceResults";
 import PredictionPanel from "@/components/predictions/PredictionPanel";
 import Link from "next/link";
+import { PageTransition } from "@/components/ui/MotionWrappers";
 
 interface RaceDetailPageProps {
   params: Promise<{ round: string }>;
@@ -54,91 +55,93 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
   })();
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Back navigation */}
-      <Link
-        href="/calendar"
-        className="text-f1-muted hover:text-white text-sm inline-flex items-center gap-1 transition-colors"
-      >
-        &larr; Back to Calendar
-      </Link>
+    <PageTransition>
+      <div className="space-y-6 max-w-7xl mx-auto">
+        {/* Back navigation */}
+        <Link
+          href="/calendar"
+          className="text-f1-muted hover:text-white text-sm inline-flex items-center gap-1 transition-colors"
+        >
+          &larr; Back to Calendar
+        </Link>
 
-      {/* Race header */}
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-5 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-f1-muted text-sm font-medium">
-                Round {raceInfo.round}
-              </span>
-              <span className="text-f1-border">|</span>
-              <span className="text-f1-muted text-sm">
-                {formatRaceDateLong(raceInfo.date)}
-              </span>
+        {/* Race header */}
+        <div className="rounded-xl glass-card border border-f1-border p-5 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-f1-muted text-sm font-medium">
+                  Round {raceInfo.round}
+                </span>
+                <span className="text-f1-border">|</span>
+                <span className="text-f1-muted text-sm">
+                  {formatRaceDateLong(raceInfo.date)}
+                </span>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold">
+                {flag} {raceInfo.raceName}
+              </h1>
+              <p className="text-f1-muted mt-1">
+                {raceInfo.circuitName} &middot; {raceInfo.locality}, {raceInfo.country}
+              </p>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold">
-              {flag} {raceInfo.raceName}
-            </h1>
-            <p className="text-f1-muted mt-1">
-              {raceInfo.circuitName} &middot; {raceInfo.locality}, {raceInfo.country}
-            </p>
-          </div>
-          {/* Round badge */}
-          <div className="shrink-0">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-f1-dark border border-f1-border">
-              <span className="text-f1-muted text-xs uppercase tracking-wider">Round</span>
-              <span className="text-2xl font-bold text-f1-red">{raceInfo.round}</span>
-              <span className="text-f1-muted text-xs">/ 24</span>
+            {/* Round badge */}
+            <div className="shrink-0">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-f1-dark border border-f1-border">
+                <span className="text-f1-muted text-xs uppercase tracking-wider">Round</span>
+                <span className="text-2xl font-bold text-f1-red">{raceInfo.round}</span>
+                <span className="text-f1-muted text-xs">/ 24</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column - Circuit info and map */}
-        <div className="lg:col-span-1 space-y-6">
-          {circuitData && <CircuitInfo circuit={circuitData} />}
-          {circuitData && <CircuitMap circuit={circuitData} />}
+        {/* Main content grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left column - Circuit info and map */}
+          <div className="lg:col-span-1 space-y-6">
+            {circuitData && <CircuitInfo circuit={circuitData} />}
+            {circuitData && <CircuitMap circuit={circuitData} />}
 
-          {/* Prediction panel */}
-          <PredictionPanel
-            round={roundNum}
-            qualifyingDateISO={qualifyingDateISO}
-            raceResults={raceData?.Results ?? null}
-          />
+            {/* Prediction panel */}
+            <PredictionPanel
+              round={roundNum}
+              qualifyingDateISO={qualifyingDateISO}
+              raceResults={raceData?.Results ?? null}
+            />
+          </div>
+
+          {/* Right column - Results */}
+          <div className="lg:col-span-2 space-y-6">
+            <QualifyingResults results={qualifyingData?.QualifyingResults ?? []} />
+            <RaceResults results={raceData?.Results ?? []} />
+          </div>
         </div>
 
-        {/* Right column - Results */}
-        <div className="lg:col-span-2 space-y-6">
-          <QualifyingResults results={qualifyingData?.QualifyingResults ?? []} />
-          <RaceResults results={raceData?.Results ?? []} />
+        {/* Navigation between rounds */}
+        <div className="flex justify-between items-center pt-4 border-t border-f1-border">
+          {roundNum > 1 ? (
+            <Link
+              href={`/race/${roundNum - 1}`}
+              className="text-sm text-f1-muted hover:text-white transition-colors inline-flex items-center gap-1"
+            >
+              &larr; Round {roundNum - 1}
+            </Link>
+          ) : (
+            <div />
+          )}
+          {roundNum < 24 ? (
+            <Link
+              href={`/race/${roundNum + 1}`}
+              className="text-sm text-f1-muted hover:text-white transition-colors inline-flex items-center gap-1"
+            >
+              Round {roundNum + 1} &rarr;
+            </Link>
+          ) : (
+            <div />
+          )}
         </div>
       </div>
-
-      {/* Navigation between rounds */}
-      <div className="flex justify-between items-center pt-4 border-t border-f1-border">
-        {roundNum > 1 ? (
-          <Link
-            href={`/race/${roundNum - 1}`}
-            className="text-sm text-f1-muted hover:text-white transition-colors inline-flex items-center gap-1"
-          >
-            &larr; Round {roundNum - 1}
-          </Link>
-        ) : (
-          <div />
-        )}
-        {roundNum < 24 ? (
-          <Link
-            href={`/race/${roundNum + 1}`}
-            className="text-sm text-f1-muted hover:text-white transition-colors inline-flex items-center gap-1"
-          >
-            Round {roundNum + 1} &rarr;
-          </Link>
-        ) : (
-          <div />
-        )}
-      </div>
-    </div>
+    </PageTransition>
   );
 }

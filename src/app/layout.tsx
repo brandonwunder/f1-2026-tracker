@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Orbitron } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/layout/Navigation';
 
 const inter = Inter({ subsets: ['latin'] });
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  variable: '--font-orbitron',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Brycen's F1 2026 Tracker",
@@ -16,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${orbitron.variable}`}>
       <body className={`${inter.className} bg-f1-dark text-white min-h-screen`}>
         <Navigation />
         <main className="pt-16 lg:pt-0 lg:ml-64 min-h-screen">

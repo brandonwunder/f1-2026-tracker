@@ -15,6 +15,14 @@ body {
   @apply bg-f1-dark text-white antialiased;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* =========================================================================
+   Scrollbar
+   ========================================================================= */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -36,4 +44,170 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: #2E2E3E #15151E;
+}
+
+/* =========================================================================
+   Glass card effect
+   ========================================================================= */
+
+.glass-card {
+  background: rgba(31, 31, 43, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(46, 46, 62, 0.6);
+}
+
+.glass-card:hover {
+  background: rgba(42, 42, 58, 0.7);
+  border-color: rgba(225, 6, 0, 0.3);
+}
+
+/* =========================================================================
+   Gradient border effect
+   ========================================================================= */
+
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #E10600, #ff6b35, #E10600);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* =========================================================================
+   Holographic shimmer for trading cards
+   ========================================================================= */
+
+.holo-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 215, 0, 0.08) 45%,
+    rgba(255, 255, 255, 0.13) 50%,
+    rgba(255, 215, 0, 0.08) 55%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* =========================================================================
+   Shimmer skeleton loader
+   ========================================================================= */
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(31, 31, 43, 1) 25%,
+    rgba(42, 42, 58, 1) 50%,
+    rgba(31, 31, 43, 1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* =========================================================================
+   Checkered flag pattern
+   ========================================================================= */
+
+.checkered-pattern {
+  background-image:
+    linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.03) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.03) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* =========================================================================
+   Glow effects
+   ========================================================================= */
+
+.glow-red {
+  box-shadow: 0 0 20px 2px rgba(225, 6, 0, 0.3);
+}
+
+.glow-gold {
+  box-shadow: 0 0 15px 2px rgba(255, 215, 0, 0.25);
+}
+
+.glow-silver {
+  box-shadow: 0 0 15px 2px rgba(192, 192, 192, 0.2);
+}
+
+.glow-bronze {
+  box-shadow: 0 0 15px 2px rgba(205, 127, 50, 0.2);
+}
+
+/* =========================================================================
+   Focus rings
+   ========================================================================= */
+
+:focus-visible {
+  outline: 2px solid rgba(225, 6, 0, 0.6);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   Toast notification
+   ========================================================================= */
+
+.toast-enter {
+  animation: slide-up 0.3s ease-out, fade-in 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* =========================================================================
+   Bar grow animation for standings points bars
+   ========================================================================= */
+
+@keyframes bar-grow-anim {
+  0% { width: 0%; }
+  100% { width: var(--bar-width, 0%); }
+}
+
+.bar-grow {
+  width: var(--bar-width, 0%);
+  animation: bar-grow-anim 0.8s ease-out forwards;
 }

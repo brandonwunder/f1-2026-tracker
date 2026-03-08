@@ -1,10 +1,7 @@
 "use client";
 
 import type { PredictionScore } from "@/lib/predictions/store";
-
-interface AccuracyStatsProps {
-  raceScores: PredictionScore[];
-}
+import { StaggeredGrid, StaggeredItem } from "@/components/ui/MotionWrappers";
 
 /** Calculate accuracy metrics from scored predictions */
 function computeStats(raceScores: PredictionScore[]) {
@@ -60,6 +57,10 @@ function computeStats(raceScores: PredictionScore[]) {
   return { scoringPct, bestRaceScore, currentStreak, longestStreak };
 }
 
+interface AccuracyStatsProps {
+  raceScores: PredictionScore[];
+}
+
 export default function AccuracyStats({ raceScores }: AccuracyStatsProps) {
   const { scoringPct, bestRaceScore, currentStreak, longestStreak } =
     computeStats(raceScores);
@@ -92,18 +93,17 @@ export default function AccuracyStats({ raceScores }: AccuracyStatsProps) {
       <h2 className="text-xs uppercase tracking-wider text-f1-muted mb-3 font-medium">
         Accuracy Stats
       </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <StaggeredGrid className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {stats.map((s) => (
-          <div
-            key={s.label}
-            className="rounded-xl bg-f1-surface border border-f1-border p-4"
-          >
-            <p className="text-xs text-f1-muted mb-1">{s.label}</p>
-            <p className="text-2xl font-bold">{s.value}</p>
-            <p className="text-[11px] text-f1-muted mt-1 leading-tight">{s.sub}</p>
-          </div>
+          <StaggeredItem key={s.label}>
+            <div className="glass-card rounded-xl p-4">
+              <p className="text-xs text-f1-muted mb-1">{s.label}</p>
+              <p className="text-2xl font-bold font-orbitron">{s.value}</p>
+              <p className="text-[11px] text-f1-muted mt-1 leading-tight">{s.sub}</p>
+            </div>
+          </StaggeredItem>
         ))}
-      </div>
+      </StaggeredGrid>
     </div>
   );
 }

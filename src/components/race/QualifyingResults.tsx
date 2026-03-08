@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, type Variants } from "framer-motion";
 import type { QualifyingResult } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 
@@ -33,10 +36,26 @@ function getTeamColor(constructorId: string): string {
   return mapping[constructorId] ?? "#8B8B9E";
 }
 
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.04 },
+  },
+};
+
+const rowVariants: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+};
+
 export default function QualifyingResults({ results }: QualifyingResultsProps) {
   if (!results || results.length === 0) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-6">
+      <div className="rounded-xl glass-card border border-f1-border p-6">
         <h3 className="text-lg font-bold mb-2">Qualifying Results</h3>
         <p className="text-f1-muted text-sm">Qualifying results not yet available.</p>
       </div>
@@ -44,7 +63,7 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
   }
 
   return (
-    <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+    <div className="rounded-xl glass-card border border-f1-border p-5">
       <h3 className="text-lg font-bold mb-4">Qualifying Results</h3>
 
       {/* Desktop table */}
@@ -60,15 +79,20 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
               <th className="text-right py-2 px-2">Q3</th>
             </tr>
           </thead>
-          <tbody>
+          <motion.tbody
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {results.map((result) => {
               const pos = parseInt(result.position, 10);
               const isPole = pos === 1;
               const teamColor = getTeamColor(result.Constructor.constructorId);
 
               return (
-                <tr
+                <motion.tr
                   key={result.position}
+                  variants={rowVariants}
                   className={`border-b border-f1-border/50 hover:bg-f1-surface-hover transition-colors ${
                     isPole ? "bg-yellow-500/5" : ""
                   }`}
@@ -76,7 +100,7 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                   <td className="py-2.5 px-2">
                     <span
                       className={`font-bold ${
-                        isPole ? "text-yellow-400" : "text-f1-muted"
+                        isPole ? "text-yellow-400 glow-gold" : "text-f1-muted"
                       }`}
                     >
                       {result.position}
@@ -108,26 +132,32 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                       {result.Q3 ?? "-"}
                     </span>
                   </td>
-                </tr>
+                </motion.tr>
               );
             })}
-          </tbody>
+          </motion.tbody>
         </table>
       </div>
 
       {/* Mobile cards */}
-      <div className="md:hidden space-y-2">
+      <motion.div
+        className="md:hidden space-y-2"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {results.map((result) => {
           const pos = parseInt(result.position, 10);
           const isPole = pos === 1;
           const teamColor = getTeamColor(result.Constructor.constructorId);
 
           return (
-            <div
+            <motion.div
               key={result.position}
+              variants={rowVariants}
               className={`flex items-center gap-3 p-3 rounded-lg border ${
                 isPole
-                  ? "border-yellow-500/30 bg-yellow-500/5"
+                  ? "border-yellow-500/30 bg-yellow-500/5 glow-gold"
                   : "border-f1-border/50 bg-f1-dark/50"
               }`}
               style={{ borderLeftColor: teamColor, borderLeftWidth: "3px" }}
@@ -156,10 +186,10 @@ export default function QualifyingResults({ results }: QualifyingResultsProps) {
                   {result.Q3 ? "Q3" : result.Q2 ? "Q2" : "Q1"}
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }

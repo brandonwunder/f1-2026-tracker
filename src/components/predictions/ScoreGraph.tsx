@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   ResponsiveContainer,
   LineChart,
@@ -27,14 +28,19 @@ interface DataPoint {
 export default function ScoreGraph({ raceScores, calendar }: ScoreGraphProps) {
   if (raceScores.length === 0) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="glass-card rounded-xl p-6"
+      >
         <h2 className="text-xs uppercase tracking-wider text-f1-muted mb-3 font-medium">
           Score Over Time
         </h2>
         <p className="text-f1-muted text-sm">
           No scored predictions yet. Make predictions and check back after races complete.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
@@ -54,7 +60,12 @@ export default function ScoreGraph({ raceScores, calendar }: ScoreGraphProps) {
   });
 
   return (
-    <div className="rounded-xl bg-f1-surface border border-f1-border p-6">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="glass-card rounded-xl p-6"
+    >
       <h2 className="text-xs uppercase tracking-wider text-f1-muted mb-4 font-medium">
         Score Over Time
       </h2>
@@ -115,6 +126,6 @@ export default function ScoreGraph({ raceScores, calendar }: ScoreGraphProps) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </motion.div>
   );
 }

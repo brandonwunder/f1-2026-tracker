@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
+import confetti from "canvas-confetti";
 import { DRIVERS_2026, type PredictionDriver } from "@/lib/data/drivers-fallback";
 import { TEAMS } from "@/lib/constants/teams";
 import {
@@ -15,6 +17,32 @@ import {
 } from "@/lib/predictions/scoring";
 import type { PredictionScore } from "@/lib/predictions/store";
 import type { RaceResult } from "@/lib/api/types";
+import Toast, { useToast } from "@/components/ui/Toast";
+
+// =============================================================================
+// Rank title based on accumulated points
+// =============================================================================
+
+function getRankTitle(points: number): { title: string; color: string } {
+  if (points >= 450) return { title: "World Champion", color: "text-yellow-300" };
+  if (points >= 300) return { title: "Race Winner", color: "text-green-400" };
+  if (points >= 150) return { title: "Podium Finisher", color: "text-blue-400" };
+  if (points >= 50) return { title: "Points Scorer", color: "text-orange-400" };
+  return { title: "Rookie", color: "text-f1-muted" };
+}
+
+function getAccumulatedPoints(): number {
+  try {
+    const stored = localStorage.getItem("f1-predictions");
+    if (!stored) return 0;
+    const predictions = JSON.parse(stored);
+    if (!Array.isArray(predictions)) return 0;
+    // Sum up points from scored predictions (those with a score field)
+    return predictions.reduce((sum: number, p: { score?: number }) => sum + (p.score ?? 0), 0);
+  } catch {
+    return 0;
+  }
+}
 
 // =============================================================================
 // Props
@@ -42,6 +70,9 @@ export default function PredictionPanel({
   const [locked, setLocked] = useState(false);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [score, setScore] = useState<PredictionScore | null>(null);
+  const [accumulatedPoints, setAccumulatedPoints] = useState(0);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
+  const { toast, showToast, hideToast } = useToast();
 
   const resultsAvailable = hasRaceResults(raceResults);
 
@@ -57,6 +88,7 @@ export default function PredictionPanel({
       setP3(existing.p3);
       setLocked(existing.locked);
     }
+    setAccumulatedPoints(getAccumulatedPoints());
   }, [round]);
 
   // -------------------------------------------------------------------------
@@ -68,7 +100,7 @@ export default function PredictionPanel({
     const now = Date.now();
 
     if (now >= qualifyingTime) {
-      // Qualifying has started — lock any existing prediction
+      // Qualifying has started -- lock any existing prediction
       const existing = getPrediction(round);
       if (existing && !existing.locked) {
         lockPrediction(round);
@@ -85,7 +117,32 @@ export default function PredictionPanel({
   // -------------------------------------------------------------------------
   useEffect(() => {
     if (prediction && resultsAvailable && raceResults) {
-      setScore(scorePrediction(prediction, raceResults));
+      const scored = scorePrediction(prediction, raceResults);
+      setScore(scored);
+
+      // Trigger confetti for high scores
+      if (scored.totalPoints >= 25) {
+        setTimeout(() => {
+          confetti({
+            particleCount: scored.totalPoints >= 50 ? 150 : 80,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#E10600', '#FFD700', '#FFFFFF'],
+          });
+        }, 500);
+      } else if (scored.totalPoints >= 10) {
+        // Sparkle effect for 10pts
+        setTimeout(() => {
+          confetti({
+            particleCount: 30,
+            spread: 40,
+            origin: { y: 0.6 },
+            colors: ['#FFD700', '#FFA500'],
+            gravity: 0.8,
+            scalar: 0.8,
+          });
+        }, 500);
+      }
     }
   }, [prediction, resultsAvailable, raceResults]);
 
@@ -98,8 +155,24 @@ export default function PredictionPanel({
     const updated = getPrediction(round);
     setPrediction(updated);
     setSaved(true);
+    showToast("Prediction saved!");
     setTimeout(() => setSaved(false), 2000);
-  }, [round, p1, p2, p3]);
+
+    // Fire confetti from save button position
+    if (saveButtonRef.current) {
+      const rect = saveButtonRef.current.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
+      confetti({
+        particleCount: 60,
+        spread: 55,
+        origin: { x, y },
+        colors: ['#E10600', '#FFD700', '#FFFFFF'],
+        startVelocity: 25,
+        gravity: 0.8,
+      });
+    }
+  }, [round, p1, p2, p3, showToast]);
 
   // -------------------------------------------------------------------------
   // Helpers
@@ -157,26 +230,41 @@ export default function PredictionPanel({
     return "Miss";
   };
 
+  const rank = getRankTitle(accumulatedPoints);
+
   // =========================================================================
   // RENDER: Post-race scored state
   // =========================================================================
 
   if (prediction && resultsAvailable && score) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="glass-card rounded-xl p-5"
+      >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold">Your Predictions</h3>
           <div className="flex items-center gap-2">
             <span className="text-xs text-f1-muted uppercase tracking-wider">
               Total
             </span>
-            <span className="text-2xl font-bold text-f1-red">
+            <span className="text-2xl font-bold text-f1-red font-orbitron">
               {score.totalPoints}
               <span className="text-sm text-f1-muted font-normal ml-1">
                 pts
               </span>
             </span>
           </div>
+        </div>
+
+        {/* Rank title */}
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-xs text-f1-muted uppercase tracking-wider">Rank:</span>
+          <span className={`text-sm font-bold font-orbitron ${rank.color}`}>
+            {rank.title}
+          </span>
         </div>
 
         <div className="space-y-3">
@@ -248,7 +336,9 @@ export default function PredictionPanel({
             />
           </div>
         </div>
-      </div>
+
+        <Toast message={toast.message} show={toast.show} onClose={hideToast} />
+      </motion.div>
     );
   }
 
@@ -258,7 +348,12 @@ export default function PredictionPanel({
 
   if (locked && prediction) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="glass-card rounded-xl p-5"
+      >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold">Your Predictions</h3>
           <span className="text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
@@ -294,7 +389,9 @@ export default function PredictionPanel({
             </div>
           ))}
         </div>
-      </div>
+
+        <Toast message={toast.message} show={toast.show} onClose={hideToast} />
+      </motion.div>
     );
   }
 
@@ -304,12 +401,19 @@ export default function PredictionPanel({
 
   if (locked && !prediction) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="glass-card rounded-xl p-5"
+      >
         <h3 className="text-lg font-bold mb-2">Your Predictions</h3>
         <p className="text-f1-muted text-sm">
           Predictions are locked. You did not submit a prediction for this race.
         </p>
-      </div>
+
+        <Toast message={toast.message} show={toast.show} onClose={hideToast} />
+      </motion.div>
     );
   }
 
@@ -320,8 +424,18 @@ export default function PredictionPanel({
   const canSave = p1 && p2 && p3 && p1 !== p2 && p1 !== p3 && p2 !== p3;
 
   return (
-    <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
-      <h3 className="text-lg font-bold mb-1">Your Predictions</h3>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="glass-card rounded-xl p-5"
+    >
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-lg font-bold">Your Predictions</h3>
+        <span className={`text-xs font-bold font-orbitron ${rank.color}`}>
+          {rank.title}
+        </span>
+      </div>
       <p className="text-f1-muted text-xs mb-4">
         Pick your podium before qualifying begins.
       </p>
@@ -383,6 +497,7 @@ export default function PredictionPanel({
       </div>
 
       <button
+        ref={saveButtonRef}
         onClick={handleSave}
         disabled={!canSave}
         className={`mt-4 w-full py-2.5 rounded-lg text-sm font-bold transition-all
@@ -401,6 +516,8 @@ export default function PredictionPanel({
           {new Date(prediction.timestamp).toLocaleString()}
         </p>
       )}
-    </div>
+
+      <Toast message={toast.message} show={toast.show} onClose={hideToast} />
+    </motion.div>
   );
 }

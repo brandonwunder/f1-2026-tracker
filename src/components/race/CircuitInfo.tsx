@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { MapPin, Timer, CornerDownRight, Ruler, Calendar, Flag } from "lucide-react";
 import type { CircuitData } from "@/lib/data/circuits";
 
 interface CircuitInfoProps {
@@ -12,63 +16,65 @@ export default function CircuitInfo({ circuit }: CircuitInfoProps) {
       ? "Semi-Permanent"
       : "Permanent Circuit";
 
+  const infoItems = [
+    {
+      icon: MapPin,
+      label: "Location",
+      value: circuit.location,
+    },
+    {
+      icon: Flag,
+      label: "Circuit Type",
+      value: typeLabel,
+    },
+    {
+      icon: Ruler,
+      label: "Track Length",
+      value: `${circuit.lengthKm.toFixed(3)} km`,
+    },
+    {
+      icon: CornerDownRight,
+      label: "Turns",
+      value: String(circuit.turns),
+    },
+    {
+      icon: Calendar,
+      label: "First Grand Prix",
+      value: String(circuit.firstGP),
+    },
+    {
+      icon: Timer,
+      label: "Lap Record",
+      value: circuit.lapRecord.time,
+      subtext: `${circuit.lapRecord.driver} (${circuit.lapRecord.year})`,
+    },
+  ];
+
   return (
-    <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="rounded-xl glass-card border border-f1-border p-5"
+    >
       <h3 className="text-lg font-bold mb-4">Circuit Information</h3>
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-        {/* Location */}
-        <div>
-          <span className="text-f1-muted block text-xs uppercase tracking-wider mb-0.5">
-            Location
-          </span>
-          <span className="font-medium">{circuit.location}</span>
-        </div>
-
-        {/* Circuit Type */}
-        <div>
-          <span className="text-f1-muted block text-xs uppercase tracking-wider mb-0.5">
-            Circuit Type
-          </span>
-          <span className="font-medium">{typeLabel}</span>
-        </div>
-
-        {/* Track Length */}
-        <div>
-          <span className="text-f1-muted block text-xs uppercase tracking-wider mb-0.5">
-            Track Length
-          </span>
-          <span className="font-medium">{circuit.lengthKm.toFixed(3)} km</span>
-        </div>
-
-        {/* Number of Turns */}
-        <div>
-          <span className="text-f1-muted block text-xs uppercase tracking-wider mb-0.5">
-            Turns
-          </span>
-          <span className="font-medium">{circuit.turns}</span>
-        </div>
-
-        {/* First GP */}
-        <div>
-          <span className="text-f1-muted block text-xs uppercase tracking-wider mb-0.5">
-            First Grand Prix
-          </span>
-          <span className="font-medium">{circuit.firstGP}</span>
-        </div>
-
-        {/* Lap Record */}
-        <div>
-          <span className="text-f1-muted block text-xs uppercase tracking-wider mb-0.5">
-            Lap Record
-          </span>
-          <span className="font-medium">
-            {circuit.lapRecord.time}
-          </span>
-          <span className="text-f1-muted block text-xs">
-            {circuit.lapRecord.driver} ({circuit.lapRecord.year})
-          </span>
-        </div>
+        {infoItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div key={item.label}>
+              <span className="text-f1-muted flex items-center gap-1.5 text-xs uppercase tracking-wider mb-0.5">
+                <Icon className="w-3.5 h-3.5 text-f1-red" />
+                {item.label}
+              </span>
+              <span className="font-medium">{item.value}</span>
+              {item.subtext && (
+                <span className="text-f1-muted block text-xs">{item.subtext}</span>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Overtaking Spots */}
@@ -85,6 +91,6 @@ export default function CircuitInfo({ circuit }: CircuitInfoProps) {
           ))}
         </ul>
       </div>
-    </div>
+    </motion.div>
   );
 }

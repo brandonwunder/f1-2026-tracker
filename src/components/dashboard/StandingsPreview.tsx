@@ -1,7 +1,10 @@
+'use client';
+
 import Link from "next/link";
 import type { DriverStanding, ConstructorStanding } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import { getTeamIdFromConstructor } from "@/lib/utils/drivers";
+import { motion } from "framer-motion";
 
 function getTeamColor(constructorId: string): string {
   const teamId = getTeamIdFromConstructor(constructorId);
@@ -20,6 +23,24 @@ interface ConstructorPreviewProps {
 
 type StandingsPreviewProps = DriverPreviewProps | ConstructorPreviewProps;
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.35, ease: 'easeOut' as const },
+  },
+};
+
 export default function StandingsPreview(props: StandingsPreviewProps) {
   const { type } = props;
   const title = type === "drivers" ? "Driver Standings" : "Constructor Standings";
@@ -30,7 +51,7 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
 
   if (top5.length === 0) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+      <div className="rounded-xl glass-card p-5">
         <h3 className="text-sm font-semibold text-f1-muted uppercase tracking-wider mb-3">
           {title}
         </h3>
@@ -42,21 +63,32 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
   }
 
   return (
-    <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+    <motion.div
+      className="rounded-xl glass-card p-5"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
       <h3 className="text-sm font-semibold text-f1-muted uppercase tracking-wider mb-4">
         {title}
       </h3>
 
-      <div className="space-y-2.5">
+      <motion.div
+        className="space-y-2.5"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {type === "drivers"
           ? (top5 as DriverStanding[]).map((entry) => {
               const constructorId =
                 entry.Constructors?.[0]?.constructorId ?? "";
               const teamColor = getTeamColor(constructorId);
               return (
-                <div
+                <motion.div
                   key={entry.Driver.driverId}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 rounded-lg px-2 py-1.5 transition-all duration-200 hover:bg-f1-surface-hover hover:-translate-y-0.5"
+                  variants={rowVariants}
                 >
                   <span className="text-sm font-bold text-f1-muted w-5 text-right tabular-nums">
                     {entry.position}
@@ -72,16 +104,17 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
                   <span className="text-sm font-bold text-white tabular-nums">
                     {entry.points}
                   </span>
-                </div>
+                </motion.div>
               );
             })
           : (top5 as ConstructorStanding[]).map((entry) => {
               const constructorId = entry.Constructor.constructorId;
               const teamColor = getTeamColor(constructorId);
               return (
-                <div
+                <motion.div
                   key={constructorId}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 rounded-lg px-2 py-1.5 transition-all duration-200 hover:bg-f1-surface-hover hover:-translate-y-0.5"
+                  variants={rowVariants}
                 >
                   <span className="text-sm font-bold text-f1-muted w-5 text-right tabular-nums">
                     {entry.position}
@@ -96,10 +129,10 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
                   <span className="text-sm font-bold text-white tabular-nums">
                     {entry.points}
                   </span>
-                </div>
+                </motion.div>
               );
             })}
-      </div>
+      </motion.div>
 
       <Link
         href="/standings"
@@ -107,6 +140,6 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
       >
         View full standings &rarr;
       </Link>
-    </div>
+    </motion.div>
   );
 }

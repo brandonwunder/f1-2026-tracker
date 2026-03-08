@@ -1,7 +1,10 @@
+'use client';
+
 import Link from "next/link";
 import type { RaceWithResults } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 import { getTeamIdFromConstructor } from "@/lib/utils/drivers";
+import { motion } from "framer-motion";
 
 function getTeamColor(constructorId: string): string {
   const teamId = getTeamIdFromConstructor(constructorId);
@@ -13,6 +16,12 @@ const PODIUM_COLORS = {
   P1: "#FFD700",
   P2: "#C0C0C0",
   P3: "#CD7F32",
+} as const;
+
+const PODIUM_GLOW_CLASSES = {
+  P1: "glow-gold",
+  P2: "glow-silver",
+  P3: "glow-bronze",
 } as const;
 
 interface RecentResultProps {
@@ -30,50 +39,63 @@ export default function RecentResult({ race }: RecentResultProps) {
   }
 
   return (
-    <Link
-      href={`/race/${race.round}`}
-      className="group block rounded-xl bg-f1-surface border border-f1-border p-5 transition-all duration-200 hover:bg-f1-surface-hover"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-f1-muted uppercase tracking-wider">
-          Last Race Result
-        </h3>
-        <span className="text-xs text-f1-muted group-hover:text-white transition-colors">
-          Full results &rarr;
-        </span>
-      </div>
+      <Link
+        href={`/race/${race.round}`}
+        className="group block rounded-xl glass-card p-5 transition-all duration-200 hover:bg-f1-surface-hover"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-f1-muted uppercase tracking-wider">
+            Last Race Result
+          </h3>
+          <span className="text-xs text-f1-muted group-hover:text-white transition-colors">
+            Full results &rarr;
+          </span>
+        </div>
 
-      <p className="text-white font-semibold mb-4">{race.raceName}</p>
+        <p className="text-white font-semibold mb-4">{race.raceName}</p>
 
-      <div className="space-y-2.5">
-        {podium.map((result, i) => {
-          const label = PODIUM_LABELS[i];
-          const constructorId = result.Constructor.constructorId;
-          const teamColor = getTeamColor(constructorId);
+        <div className="space-y-2.5">
+          {podium.map((result, i) => {
+            const label = PODIUM_LABELS[i];
+            const constructorId = result.Constructor.constructorId;
+            const teamColor = getTeamColor(constructorId);
+            const glowClass = PODIUM_GLOW_CLASSES[label];
 
-          return (
-            <div key={result.Driver.driverId} className="flex items-center gap-3">
-              <span
-                className="text-sm font-bold w-6 text-center"
-                style={{ color: PODIUM_COLORS[label] }}
+            return (
+              <motion.div
+                key={result.Driver.driverId}
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, x: -15 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 + i * 0.1 }}
               >
-                {label}
-              </span>
-              <div
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ backgroundColor: teamColor }}
-              />
-              <span className="flex-1 text-sm text-white truncate">
-                {result.Driver.givenName}{" "}
-                <span className="font-bold">{result.Driver.familyName}</span>
-              </span>
-              <span className="text-xs text-f1-muted">
-                {result.Constructor.name}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </Link>
+                <span
+                  className={`text-sm font-bold w-6 text-center rounded-md px-1 py-0.5 ${glowClass}`}
+                  style={{ color: PODIUM_COLORS[label] }}
+                >
+                  {label}
+                </span>
+                <div
+                  className="w-2 h-2 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: teamColor }}
+                />
+                <span className="flex-1 text-sm text-white truncate">
+                  {result.Driver.givenName}{" "}
+                  <span className="font-bold">{result.Driver.familyName}</span>
+                </span>
+                <span className="text-xs text-f1-muted">
+                  {result.Constructor.name}
+                </span>
+              </motion.div>
+            );
+          })}
+        </div>
+      </Link>
+    </motion.div>
   );
 }

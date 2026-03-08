@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, type Variants } from "framer-motion";
 import type { RaceResult } from "@/lib/api/types";
 import { TEAMS } from "@/lib/constants/teams";
 
@@ -44,6 +47,19 @@ function getPodiumStyle(position: number): string {
   }
 }
 
+function getPodiumGlow(position: number): string {
+  switch (position) {
+    case 1:
+      return "glow-gold";
+    case 2:
+      return "glow-silver";
+    case 3:
+      return "glow-bronze";
+    default:
+      return "";
+  }
+}
+
 function isDNF(status: string): boolean {
   const finishedStatuses = ["Finished", "+1 Lap", "+2 Laps", "+3 Laps", "+4 Laps", "+5 Laps"];
   return !finishedStatuses.includes(status);
@@ -60,10 +76,26 @@ function getStatusDisplay(result: RaceResult): string {
   return result.status;
 }
 
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.04 },
+  },
+};
+
+const rowVariants: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+};
+
 export default function RaceResults({ results }: RaceResultsProps) {
   if (!results || results.length === 0) {
     return (
-      <div className="rounded-xl bg-f1-surface border border-f1-border p-6">
+      <div className="rounded-xl glass-card border border-f1-border p-6">
         <h3 className="text-lg font-bold mb-2">Race Results</h3>
         <p className="text-f1-muted text-sm">Race results not yet available.</p>
       </div>
@@ -76,7 +108,7 @@ export default function RaceResults({ results }: RaceResultsProps) {
   const sorted = [...finishers, ...dnfs];
 
   return (
-    <div className="rounded-xl bg-f1-surface border border-f1-border p-5">
+    <div className="rounded-xl glass-card border border-f1-border p-5">
       <h3 className="text-lg font-bold mb-4">Race Results</h3>
 
       {/* Desktop table */}
@@ -93,22 +125,28 @@ export default function RaceResults({ results }: RaceResultsProps) {
               <th className="text-left py-2 px-2">Status</th>
             </tr>
           </thead>
-          <tbody>
+          <motion.tbody
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {sorted.map((result) => {
               const pos = parseInt(result.position, 10);
               const teamColor = getTeamColor(result.Constructor.constructorId);
               const hasFastestLap = result.FastestLap?.rank === "1";
               const dnf = isDNF(result.status);
+              const glowClass = getPodiumGlow(pos);
 
               return (
-                <tr
+                <motion.tr
                   key={result.position}
+                  variants={rowVariants}
                   className={`border-b border-f1-border/50 hover:bg-f1-surface-hover transition-colors ${
                     dnf ? "opacity-60" : ""
                   } ${pos <= 3 ? "bg-white/[0.02]" : ""}`}
                 >
                   <td className="py-2.5 px-2">
-                    <span className={`font-bold ${getPodiumStyle(pos)}`}>
+                    <span className={`font-bold ${getPodiumStyle(pos)} ${glowClass}`}>
                       {result.positionText}
                     </span>
                   </td>
@@ -142,7 +180,7 @@ export default function RaceResults({ results }: RaceResultsProps) {
                   <td className="py-2.5 px-2 text-center">
                     {hasFastestLap && (
                       <span
-                        className="inline-block w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold leading-5 text-center"
+                        className="inline-block w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold leading-5 text-center animate-pulse"
                         title={`Fastest Lap: ${result.FastestLap?.Time?.time}`}
                       >
                         F
@@ -156,24 +194,31 @@ export default function RaceResults({ results }: RaceResultsProps) {
                       <span className="text-f1-muted">{getStatusDisplay(result)}</span>
                     )}
                   </td>
-                </tr>
+                </motion.tr>
               );
             })}
-          </tbody>
+          </motion.tbody>
         </table>
       </div>
 
       {/* Mobile cards */}
-      <div className="md:hidden space-y-2">
+      <motion.div
+        className="md:hidden space-y-2"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {sorted.map((result) => {
           const pos = parseInt(result.position, 10);
           const teamColor = getTeamColor(result.Constructor.constructorId);
           const hasFastestLap = result.FastestLap?.rank === "1";
           const dnf = isDNF(result.status);
+          const glowClass = getPodiumGlow(pos);
 
           return (
-            <div
+            <motion.div
               key={result.position}
+              variants={rowVariants}
               className={`flex items-center gap-3 p-3 rounded-lg border ${
                 dnf
                   ? "border-red-500/20 bg-red-500/5 opacity-70"
@@ -186,7 +231,7 @@ export default function RaceResults({ results }: RaceResultsProps) {
               <span
                 className={`text-lg font-bold w-8 text-center shrink-0 ${
                   dnf ? "text-red-400" : getPodiumStyle(pos)
-                }`}
+                } ${glowClass}`}
               >
                 {result.positionText}
               </span>
@@ -197,7 +242,7 @@ export default function RaceResults({ results }: RaceResultsProps) {
                     <span className="font-bold">{result.Driver.familyName}</span>
                   </span>
                   {hasFastestLap && (
-                    <span className="inline-block w-4 h-4 rounded-full bg-purple-500/20 text-purple-400 text-[10px] font-bold leading-4 text-center shrink-0">
+                    <span className="inline-block w-4 h-4 rounded-full bg-purple-500/20 text-purple-400 text-[10px] font-bold leading-4 text-center shrink-0 animate-pulse">
                       F
                     </span>
                   )}
@@ -222,10 +267,10 @@ export default function RaceResults({ results }: RaceResultsProps) {
                   <div className="text-f1-muted text-xs">{result.points} pts</div>
                 )}
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }

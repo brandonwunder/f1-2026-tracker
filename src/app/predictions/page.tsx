@@ -5,6 +5,7 @@ import { getAllPredictions, type Prediction } from "@/lib/predictions/store";
 import { getSeasonScore, type SeasonScore } from "@/lib/predictions/scoring";
 import type { RaceResult } from "@/lib/api/types";
 import { CALENDAR_2026 } from "@/lib/data/calendar-fallback";
+import { PageTransition } from "@/components/ui/MotionWrappers";
 import SeasonScoreCard from "@/components/predictions/SeasonScore";
 import AccuracyStats from "@/components/predictions/AccuracyStats";
 import ScoreGraph from "@/components/predictions/ScoreGraph";
@@ -39,7 +40,7 @@ async function fetchResultsForRounds(
         resultsByRound[round] = data.Results;
       }
     } catch {
-      // Silently skip — results not available yet
+      // Silently skip -- results not available yet
     }
   });
 
@@ -91,18 +92,20 @@ export default function PredictionsPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <div
-              key={i}
-              className="rounded-xl bg-f1-surface border border-f1-border p-6 animate-pulse h-40"
-            />
-          ))}
+      <PageTransition>
+        <div className="space-y-6">
+          <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[1, 2].map((i) => (
+              <div
+                key={i}
+                className="rounded-xl bg-f1-surface border border-f1-border p-6 skeleton-shimmer h-40"
+              />
+            ))}
+          </div>
+          <div className="rounded-xl bg-f1-surface border border-f1-border p-6 skeleton-shimmer h-72" />
         </div>
-        <div className="rounded-xl bg-f1-surface border border-f1-border p-6 animate-pulse h-72" />
-      </div>
+      </PageTransition>
     );
   }
 
@@ -112,16 +115,18 @@ export default function PredictionsPage() {
 
   if (predictions.length === 0) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
-        <div className="rounded-xl bg-f1-surface border border-f1-border p-8 text-center">
-          <p className="text-f1-muted text-lg mb-2">No predictions yet</p>
-          <p className="text-f1-muted text-sm">
-            Visit individual race pages to make your P1/P2/P3 podium predictions.
-            Your scores, accuracy stats, and performance graph will appear here.
-          </p>
+      <PageTransition>
+        <div className="space-y-6">
+          <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
+          <div className="rounded-xl bg-f1-surface border border-f1-border p-8 text-center">
+            <p className="text-f1-muted text-lg mb-2">No predictions yet</p>
+            <p className="text-f1-muted text-sm">
+              Visit individual race pages to make your P1/P2/P3 podium predictions.
+              Your scores, accuracy stats, and performance graph will appear here.
+            </p>
+          </div>
         </div>
-      </div>
+      </PageTransition>
     );
   }
 
@@ -133,40 +138,42 @@ export default function PredictionsPage() {
   const totalPoints = seasonScore?.totalPoints ?? 0;
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
+    <PageTransition>
+      <div className="space-y-6">
+        <h1 className="text-2xl md:text-3xl font-bold">Predictions Hub</h1>
 
-      {/* Score summary + accuracy stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-1">
-          <SeasonScoreCard totalPoints={totalPoints} raceScores={raceScores} />
+        {/* Score summary + accuracy stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-1">
+            <SeasonScoreCard totalPoints={totalPoints} raceScores={raceScores} />
+          </div>
+          <div className="md:col-span-2">
+            <AccuracyStats raceScores={raceScores} />
+          </div>
         </div>
-        <div className="md:col-span-2">
-          <AccuracyStats raceScores={raceScores} />
-        </div>
+
+        {/* Score-over-time graph */}
+        <ScoreGraph raceScores={raceScores} calendar={CALENDAR_2026} />
+
+        {/* Race-by-race breakdown */}
+        <RaceBreakdown
+          predictions={predictions}
+          raceScores={raceScores}
+          calendar={CALENDAR_2026}
+          resultsByRound={resultsByRound}
+        />
+
+        {/* Pending predictions notice */}
+        {predictions.length > raceScores.length && (
+          <div className="rounded-xl bg-f1-surface border border-f1-border p-4">
+            <p className="text-f1-muted text-sm">
+              {predictions.length - raceScores.length} prediction
+              {predictions.length - raceScores.length !== 1 ? "s" : ""} awaiting
+              race results.
+            </p>
+          </div>
+        )}
       </div>
-
-      {/* Score-over-time graph */}
-      <ScoreGraph raceScores={raceScores} calendar={CALENDAR_2026} />
-
-      {/* Race-by-race breakdown */}
-      <RaceBreakdown
-        predictions={predictions}
-        raceScores={raceScores}
-        calendar={CALENDAR_2026}
-        resultsByRound={resultsByRound}
-      />
-
-      {/* Pending predictions notice */}
-      {predictions.length > raceScores.length && (
-        <div className="rounded-xl bg-f1-surface border border-f1-border p-4">
-          <p className="text-f1-muted text-sm">
-            {predictions.length - raceScores.length} prediction
-            {predictions.length - raceScores.length !== 1 ? "s" : ""} awaiting
-            race results.
-          </p>
-        </div>
-      )}
-    </div>
+    </PageTransition>
   );
 }

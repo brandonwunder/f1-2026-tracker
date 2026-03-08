@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { LayoutGroup, motion } from 'framer-motion';
 import type { DriverStanding } from '@/lib/api/types';
 import { sortDriverStandings, type SortOption } from '@/lib/utils/drivers';
+import { StaggeredGrid, StaggeredItem } from '@/components/ui/MotionWrappers';
 import DriverCard from './DriverCard';
 
 interface DriverGridProps {
@@ -28,15 +30,15 @@ export default function DriverGrid({ standings }: DriverGridProps) {
         <span className="text-xs text-f1-muted uppercase tracking-wider font-medium">
           Sort by
         </span>
-        <div className="flex gap-1 bg-f1-dark rounded-lg p-1">
+        <div className="flex gap-1 glass-card rounded-full p-1">
           {SORT_OPTIONS.map((option) => (
             <button
               key={option.value}
               onClick={() => setSortBy(option.value)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 sortBy === option.value
-                  ? 'bg-f1-red text-white'
-                  : 'text-f1-muted hover:text-white hover:bg-f1-surface-hover'
+                  ? 'bg-f1-red text-white shadow-lg shadow-f1-red/25'
+                  : 'text-f1-muted hover:text-white'
               }`}
             >
               {option.label}
@@ -49,14 +51,17 @@ export default function DriverGrid({ standings }: DriverGridProps) {
       </div>
 
       {/* Driver Card Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {sorted.map((standing) => (
-          <DriverCard
-            key={standing.Driver.driverId}
-            standing={standing}
-          />
-        ))}
-      </div>
+      <LayoutGroup>
+        <StaggeredGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {sorted.map((standing) => (
+            <StaggeredItem key={standing.Driver.driverId}>
+              <motion.div layout layoutId={standing.Driver.driverId}>
+                <DriverCard standing={standing} />
+              </motion.div>
+            </StaggeredItem>
+          ))}
+        </StaggeredGrid>
+      </LayoutGroup>
     </div>
   );
 }
