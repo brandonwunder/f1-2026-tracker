@@ -52,13 +52,14 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
 
   if (top5.length === 0) {
     return (
-      <div className="relative rounded-xl glass-card overflow-hidden p-5">
+      <div className="relative rounded-2xl bg-[#0D0D16] border border-f1-border overflow-hidden p-5">
         <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-f1-red/30 to-transparent" />
         <div className="relative">
           <h3 className="text-[10px] font-black text-f1-red uppercase tracking-widest mb-3">
             {title}
           </h3>
-          <p className="text-f1-muted text-sm">
+          <p className="text-white/40 text-sm">
             Standings data will appear once the season begins.
           </p>
         </div>
@@ -68,13 +69,13 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
 
   return (
     <motion.div
-      className="relative rounded-xl glass-card overflow-hidden"
+      className="relative rounded-2xl bg-[#0D0D16] border border-f1-border overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       {/* Accent stripe */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-f1-red/40 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-f1-red/50 to-transparent" />
       <div className="absolute inset-0 carbon-fiber opacity-15 pointer-events-none" />
 
       <div className="relative p-5">
@@ -96,11 +97,11 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
                 return (
                   <motion.div
                     key={entry.Driver.driverId}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-f1-surface-hover hover:-translate-y-0.5"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 bg-white/[0.03] border border-white/[0.04] transition-all duration-200 hover:bg-white/[0.06] hover:-translate-y-0.5"
                     style={{ borderLeft: `3px solid ${teamColor}` }}
                     variants={rowVariants}
                   >
-                    <span className="text-sm font-black text-f1-muted w-5 text-right tabular-nums font-orbitron">
+                    <span className="text-sm font-black text-white/50 w-5 text-right tabular-nums font-orbitron">
                       {entry.position}
                     </span>
                     <TeamLogo teamId={constructorId} size={18} />
@@ -120,11 +121,11 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
                 return (
                   <motion.div
                     key={constructorId}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-f1-surface-hover hover:-translate-y-0.5"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 bg-white/[0.03] border border-white/[0.04] transition-all duration-200 hover:bg-white/[0.06] hover:-translate-y-0.5"
                     style={{ borderLeft: `3px solid ${teamColor}` }}
                     variants={rowVariants}
                   >
-                    <span className="text-sm font-black text-f1-muted w-5 text-right tabular-nums font-orbitron">
+                    <span className="text-sm font-black text-white/50 w-5 text-right tabular-nums font-orbitron">
                       {entry.position}
                     </span>
                     <TeamLogo teamId={constructorId} size={18} />
@@ -141,8 +142,8 @@ export default function StandingsPreview(props: StandingsPreviewProps) {
 
         <Link
           href="/standings"
-          className="block mt-4 pt-3 text-center text-xs font-bold text-f1-muted hover:text-f1-red transition-colors uppercase tracking-widest"
-          style={{ borderTop: '1px solid rgba(225, 6, 0, 0.1)' }}
+          className="block mt-4 pt-3 text-center text-xs font-bold text-white/40 hover:text-f1-red transition-colors uppercase tracking-widest"
+          style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}
         >
           View full standings &rarr;
         </Link>

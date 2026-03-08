@@ -13,6 +13,7 @@ interface NextRaceWidgetProps {
   locality: string;
   date: string;
   time?: string;
+  hasRaceResults?: boolean;
 }
 
 export default function NextRaceWidget({
@@ -23,6 +24,7 @@ export default function NextRaceWidget({
   locality,
   date,
   time,
+  hasRaceResults = false,
 }: NextRaceWidgetProps) {
   const flag = getCountryFlag(country);
   const formattedDate = formatRaceDateLong(date);
@@ -36,19 +38,25 @@ export default function NextRaceWidget({
     >
       <Link
         href={`/race/${round}`}
-        className="group relative block rounded-xl glass-card border border-f1-red/30 overflow-hidden transition-all duration-200 hover:border-f1-red/60"
+        className="group relative block rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(225,6,0,0.15)]"
       >
+        {/* Solid darker background for contrast */}
+        <div className="absolute inset-0 bg-[#0D0D16]" />
         {/* Racing stripe top */}
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-f1-red to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-f1-red via-red-400 to-f1-red" />
+        {/* Left accent */}
+        <div className="absolute top-0 left-0 bottom-0 w-1 bg-f1-red" />
         {/* Carbon fiber texture */}
-        <div className="absolute inset-0 carbon-fiber opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 carbon-fiber opacity-25 pointer-events-none" />
         {/* Red radial glow */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at top right, rgba(225, 6, 0, 0.08), transparent 60%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at top right, rgba(225, 6, 0, 0.1), transparent 60%)' }} />
+        {/* Border */}
+        <div className="absolute inset-0 rounded-2xl border border-f1-red/30 pointer-events-none" />
 
         <div className="relative p-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-f1-red bg-f1-red/10 px-2.5 py-1 rounded border border-f1-red/20">
+          <div className="flex items-center justify-between mb-5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-white bg-f1-red px-3 py-1.5 rounded-md shadow-lg shadow-f1-red/30">
               Up Next &mdash; Round {round}
             </span>
             <span className="text-xs text-f1-muted group-hover:text-f1-red transition-colors font-semibold uppercase tracking-wider">
@@ -57,23 +65,28 @@ export default function NextRaceWidget({
           </div>
 
           {/* Race info */}
-          <div className="flex items-start gap-3 mb-5">
-            <span className="text-4xl leading-none">{flag}</span>
+          <div className="flex items-start gap-4 mb-6">
+            <span className="text-5xl leading-none drop-shadow-lg">{flag}</span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
+              <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight drop-shadow-sm">
                 {raceName}
               </h2>
-              <p className="text-f1-muted text-sm mt-1 font-medium">{circuitName}</p>
-              <p className="text-f1-muted text-sm font-medium">
+              <p className="text-white/60 text-sm mt-1.5 font-semibold">{circuitName}</p>
+              <p className="text-white/40 text-sm font-medium">
                 {locality} &middot; {formattedDate}
               </p>
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="broadcast-divider mb-5" />
+
           {/* Countdown */}
-          <div className="font-orbitron">
-            <CountdownTimer targetDate={targetDate} raceName={raceName} />
-          </div>
+          <CountdownTimer
+            targetDate={targetDate}
+            raceName={raceName}
+            raceResultsPending={!hasRaceResults}
+          />
         </div>
       </Link>
     </motion.div>
