@@ -6,6 +6,7 @@ import CircuitInfo from "@/components/race/CircuitInfo";
 import CircuitMap from "@/components/race/CircuitMap";
 import QualifyingResults from "@/components/race/QualifyingResults";
 import RaceResults from "@/components/race/RaceResults";
+import PredictionPanel from "@/components/predictions/PredictionPanel";
 import Link from "next/link";
 
 interface RaceDetailPageProps {
@@ -44,6 +45,13 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
 
   const circuitData = getCircuitByName(raceInfo.circuitName);
   const flag = getCountryFlag(raceInfo.country);
+
+  // Compute qualifying date (day before race, same time)
+  const qualifyingDateISO = (() => {
+    const raceDate = new Date(`${raceInfo.date}T${raceInfo.time ?? "14:00:00Z"}`);
+    raceDate.setDate(raceDate.getDate() - 1);
+    return raceDate.toISOString();
+  })();
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -93,14 +101,12 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
           {circuitData && <CircuitInfo circuit={circuitData} />}
           {circuitData && <CircuitMap circuit={circuitData} />}
 
-          {/* Prediction panel placeholder for Phase 7 */}
-          <div className="rounded-xl bg-f1-surface border border-f1-border border-dashed p-5">
-            <h3 className="text-lg font-bold mb-2 text-f1-muted">Your Predictions</h3>
-            <p className="text-f1-muted text-sm">
-              Prediction features coming soon. You will be able to predict
-              race winners, podiums, and more.
-            </p>
-          </div>
+          {/* Prediction panel */}
+          <PredictionPanel
+            round={roundNum}
+            qualifyingDateISO={qualifyingDateISO}
+            raceResults={raceData?.Results ?? null}
+          />
         </div>
 
         {/* Right column - Results */}
